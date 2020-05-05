@@ -1,0 +1,15 @@
+apply plugin: 'java'
+apply plugin: 'jacoco'
+apply plugin: 'application'
+
+
+mainClassName = 'RedBot.Main'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    //testImplementation     'junit:junit:4.13'
+    compile 'net.dv8tion:JDA:4.1.1_143'
+}
