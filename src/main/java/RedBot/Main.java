@@ -30,8 +30,7 @@ public class Main extends ListenerAdapter {
         String user = event.getAuthor().getAsTag();
         String userID = event.getAuthor().getId();
         String message = event.getMessage().getContentRaw();
-        System.out.println(user+"("+userID+")"+": \""
-                +message+"\"");
+        //System.out.println(user+"("+userID+")"+": \""+message+"\"");
         if(message.startsWith("d."))
             command(event, user, userID,message.split(" ")[0].substring(2), message.split(" "));
         if(message.contains("<@!") && !message.startsWith("d."))
@@ -42,11 +41,11 @@ public class Main extends ListenerAdapter {
         Random r = new Random();
         switch(command){
             case "quote": //Quotes a user's post from the past 100 posts
-                if(message[1].startsWith("<@!")){
-                    List<Message> messages = event.getChannel().getHistoryBefore(event.getMessage(), 100).complete().getRetrievedHistory();
-                    for(int i=0;i<messages.size();i++){
-                        int random = r.nextInt(messages.size()-1);
-                        Message post = messages.get(random);
+                List<Message> postHistory = event.getChannel().getHistoryBefore(event.getMessage(), 100).complete().getRetrievedHistory();
+                if(message[1].startsWith("<@!")){ //Quote of a paricular user
+                    for(int i=0;i<postHistory.size();i++){
+                        int random = r.nextInt(postHistory.size()-1);
+                        Message post = postHistory.get(random);
                         if(post.getAuthor().getId().equals(message[1].substring(3, message[1].length()-1))){
                             if(post.getAuthor().isBot()){
                                 event.getChannel().sendMessage("I can't quote bots").queue();
@@ -58,7 +57,17 @@ public class Main extends ListenerAdapter {
                         event.getChannel().sendMessage("No recent posts from this user.").queue();
                     }
                 }
-                
+                else if(message[1].equals("random") || message[1].equals("Random")){ //Completely random
+                    for(int i=0;i<postHistory.size();i++){
+                        int random = r.nextInt(postHistory.size()-1);
+                        Message post = postHistory.get(random);
+                        if(post.getAuthor().isBot())
+                            continue;
+                        event.getChannel().sendMessage("\""+post.getContentRaw()+"\" - <@!"+post.getAuthor().getId()+">").queue();
+                        break;
+                    }
+                }
+                break;
         }
     }
     
