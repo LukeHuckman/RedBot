@@ -29,7 +29,7 @@ public class Main extends ListenerAdapter {
         String message = event.getMessage().getContentRaw();
         //System.out.println(user+"("+userID+")"+": \""+message+"\"");
         if(message.startsWith("d."))
-            bot.command(event, user, userID,message.split(" ")[0].substring(2), message.split(" "));
+            bot.exec(event, user, userID,message.split(" ")[0].substring(2), message.split(" "));
         if(message.contains("<@!") && !message.startsWith("d."))
             bot.mentionParse(event, message, userID);
     }
