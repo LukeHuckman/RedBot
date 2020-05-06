@@ -17,14 +17,14 @@ public class Bot {
                 event.getChannel().sendMessage(help()).queue();
                 break;
             case "quote": //Quotes a user's post from the past 100 posts
-                if(event.getMessage().getMentionedMembers().get(0).getUser().isBot()){
-                    event.getChannel().sendMessage("I can't quote bots").queue();
-                    return; //To prevent infinite loops
-                }
                 List<Message> postHistory 
                         = event.getChannel().getHistoryBefore(event.getMessage(), 100)
                                 .complete().getRetrievedHistory();
                 if(message[1].startsWith("<@!")){ //Quote of a paricular user
+                    if(event.getMessage().getMentionedMembers().get(0).getUser().isBot()){
+                    event.getChannel().sendMessage("I can't quote bots").queue();
+                    return; //To prevent infinite loops
+                }
                     for(int i=0;i<postHistory.size();i++){
                         int random = r.nextInt(postHistory.size()-1);
                         Message post = postHistory.get(random);
