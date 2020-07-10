@@ -2,8 +2,11 @@ package RedBot;
 
 import java.util.List;
 import java.util.Random;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.jsoup.select.Elements;
 
 public class Bot {
 
@@ -76,6 +79,44 @@ public class Bot {
                 };
                 event.getChannel().sendMessage(":8ball: "+answer[r.nextInt(answer.length-1)]).queue();
                 break;
+            
+            case "hentai": // TODO Optimise this train wreck
+                if(event.getTextChannel().isNSFW()){
+                    String url = "https://nhentai.net/search/?q=";
+                    for(int i=1;i<message.length;i++)
+                        url +=message[i]+"+";
+                    HParser Page = new HParser(url); //Get the first page of results
+                    Elements links = Page.getData("link");
+                    //Get the total number of results pages
+                    String lastpage[] = links.last().attr("href").split("=");
+                    url+="&page="+(1+r.nextInt(Integer.parseInt(lastpage[lastpage.length-1])-1));
+                    Page = new HParser(url); //get a random results page
+                    Elements magicNumberURLs = Page.getData("link");
+                    List linksList = magicNumberURLs.subList(21, links.size()-9);
+                    int magicNumber = Integer.parseInt(linksList.get(r.nextInt(linksList.size()-1))
+                            .toString().split("/")[2]); //Magic digits taken from <a> tags
+                    Page = new HParser("https://nhentai.net/g/"+magicNumber);
+                    Elements pageTitle = Page.getData("title");
+                    List rawTitle = pageTitle.subList(3, 5);
+                    String title = "";
+                    for(int i=0;i<rawTitle.size();i++){ // Extract and combine the title
+                        String text = rawTitle.get(i).toString().split(">")[1];
+                        title+=text.substring(0, text.length()-6);
+                    }
+                    Elements thumbnail = Page.getData("thumb"); //Get the thumbnail
+                    
+                    //Building the embed
+                    EmbedBuilder embed = new EmbedBuilder();
+                    embed.setImage(thumbnail.attr("data-src"));
+                    embed.setTitle(title,"https://nhentai.net/g/"+magicNumber);
+                    embed.setDescription("#"+ magicNumber);
+                    MessageEmbed hentaiEmbed = embed.build();
+                    event.getChannel().sendMessage(hentaiEmbed).queue();
+                }
+                else
+                    event.getChannel().sendMessage("This command can only be used in a NSFW channel.").queue();
+                    
+                break;
             default:
                 event.getChannel().sendMessage("Unknown command. "
                         + "Use `d.help` to see available commands").queue();
@@ -100,6 +141,9 @@ public class Bot {
                 + "Quotes a random post (from member of the server)\n"
                 + "\n"
                 + "`d.8ball <optional question>`:\n"
-                + "Answers a yes/no question";
+                + "Answers a yes/no question\n"
+                + "\n"
+                + "`d.hentai <term 1> <term 2> ...:`\n"
+                + "Gives a random hentai based on the terms";
     }
 }
