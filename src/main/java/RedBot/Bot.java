@@ -33,8 +33,8 @@ public class Bot {
                         Message post = postHistory.get(random);
                         if(post.getAuthor().getId().equals(message[1].substring(3, message[1].length()-1))
                                 && !post.getContentRaw().startsWith("d.")){
-                            event.getChannel().sendMessage("\""+post.getContentRaw()+"\" - <@!"
-                                    +post.getAuthor().getId()+">").queue();
+                            event.getChannel().sendMessage("`\""+post.getContentRaw()+"\"` - "
+                                    +post.getAuthor().getName()).queue();
                             break;
                         }
                         if(i==postHistory.size()-1)
@@ -45,10 +45,10 @@ public class Bot {
                     for(int i=0;i<postHistory.size();i++){
                         int random = r.nextInt(postHistory.size()-1);
                         Message post = postHistory.get(random);
-                        if(post.getAuthor().isBot())
+                        if(post.getAuthor().isBot() || post.getContentRaw().startsWith("d."))
                             continue;
-                        event.getChannel().sendMessage("\""+post.getContentRaw()+"\" - <@!"
-                                +post.getAuthor().getId()+">").queue();
+                        event.getChannel().sendMessage("`\""+post.getContentRaw()+"\"` - "
+                                +post.getAuthor().getName()).queue();
                         break;
                     }
                 }
@@ -81,6 +81,8 @@ public class Bot {
                 break;
             
             case "hentai": // TODO Optimise this train wreck
+                if(message.length==1)
+                    event.getChannel().sendMessage("Usage: `d.hentai <term 1> <term 2> ...`").queue();
                 if(event.getTextChannel().isNSFW()){
                     String url = "https://nhentai.net/search/?q=";
                     for(int i=1;i<message.length;i++)
@@ -130,7 +132,7 @@ public class Bot {
                 switch(words[i].charAt(2)){
                     case '!': //A snarky remark if you mention yourself
                         if(words[i].substring(3, words[i].length()-1).equals(userID))
-                            event.getChannel().sendMessage("Lmao y u mentioning urself").queue();
+                            event.getChannel().sendMessage("Lmao y u @ urself").queue();
                         break;
                 }
     }
