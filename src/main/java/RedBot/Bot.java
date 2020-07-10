@@ -20,36 +20,40 @@ public class Bot {
                 event.getChannel().sendMessage(help()).queue();
                 break;
             case "quote": //Quotes a user's post from the past 100 posts
-                List<Message> postHistory 
-                        = event.getChannel().getHistoryBefore(event.getMessage(), 100)
-                                .complete().getRetrievedHistory();
-                if(message[1].startsWith("<@!")){ //Quote of a paricular user
-                    if(event.getMessage().getMentionedMembers().get(0).getUser().isBot()){
-                    event.getChannel().sendMessage("I can't quote bots").queue();
-                    return; //To prevent infinite loops
-                }
-                    for(int i=0;i<postHistory.size();i++){
-                        int random = r.nextInt(postHistory.size()-1);
-                        Message post = postHistory.get(random);
-                        if(post.getAuthor().getId().equals(message[1].substring(3, message[1].length()-1))
-                                && !post.getContentRaw().startsWith("d.")){
+                if(message.length==1)
+                    event.getChannel().sendMessage("Usage: `d.quote @user` or `d.quote random`").queue();
+                else{
+                    List<Message> postHistory 
+                            = event.getChannel().getHistoryBefore(event.getMessage(), 100)
+                                    .complete().getRetrievedHistory();
+                    if(message[1].startsWith("<@!")){ //Quote of a paricular user
+                        if(event.getMessage().getMentionedMembers().get(0).getUser().isBot()){
+                        event.getChannel().sendMessage("I can't quote bots").queue();
+                        return; //To prevent infinite loops
+                    }
+                        for(int i=0;i<postHistory.size();i++){
+                            int random = r.nextInt(postHistory.size()-1);
+                            Message post = postHistory.get(random);
+                            if(post.getAuthor().getId().equals(message[1].substring(3, message[1].length()-1))
+                                    && !post.getContentRaw().startsWith("d.")){
+                                event.getChannel().sendMessage("`\""+post.getContentRaw()+"\"` - "
+                                        +post.getAuthor().getName()).queue();
+                                break;
+                            }
+                            if(i==postHistory.size()-1)
+                                event.getChannel().sendMessage("No recent posts from this user.").queue();
+                        }
+                    }
+                    else if(message[1].equalsIgnoreCase("random")){ //Completely random quote
+                        for(int i=0;i<postHistory.size();i++){
+                            int random = r.nextInt(postHistory.size()-1);
+                            Message post = postHistory.get(random);
+                            if(post.getAuthor().isBot() || post.getContentRaw().startsWith("d."))
+                                continue;
                             event.getChannel().sendMessage("`\""+post.getContentRaw()+"\"` - "
                                     +post.getAuthor().getName()).queue();
                             break;
                         }
-                        if(i==postHistory.size()-1)
-                            event.getChannel().sendMessage("No recent posts from this user.").queue();
-                    }
-                }
-                else if(message[1].equalsIgnoreCase("random")){ //Completely random quote
-                    for(int i=0;i<postHistory.size();i++){
-                        int random = r.nextInt(postHistory.size()-1);
-                        Message post = postHistory.get(random);
-                        if(post.getAuthor().isBot() || post.getContentRaw().startsWith("d."))
-                            continue;
-                        event.getChannel().sendMessage("`\""+post.getContentRaw()+"\"` - "
-                                +post.getAuthor().getName()).queue();
-                        break;
                     }
                 }
                 break;
@@ -81,9 +85,12 @@ public class Bot {
                 break;
             
             case "hentai": // TODO Optimise this train wreck
-                if(message.length==1)
+                if(message.length==1 && event.getTextChannel().isNSFW())
                     event.getChannel().sendMessage("Usage: `d.hentai <term 1> <term 2> ...`").queue();
-                if(event.getTextChannel().isNSFW()){
+                else if(!event.getTextChannel().isNSFW()){
+                    event.getChannel().sendMessage("This command can only be used in a NSFW channel.").queue();
+                }
+                else{
                     String url = "https://nhentai.net/search/?q=";
                     for(int i=1;i<message.length;i++)
                         url +=message[i]+"+";
@@ -115,9 +122,6 @@ public class Bot {
                     MessageEmbed hentaiEmbed = embed.build();
                     event.getChannel().sendMessage(hentaiEmbed).queue();
                 }
-                else
-                    event.getChannel().sendMessage("This command can only be used in a NSFW channel.").queue();
-                    
                 break;
             default:
                 event.getChannel().sendMessage("Unknown command. "
