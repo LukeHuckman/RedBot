@@ -7,3 +7,4 @@ Written in Java using [JDA](https://github.com/DV8FromTheWorld/JDA).
 * Text triggers
 * Random quotes
 * Magic 8-ball
+* A NSFW command
