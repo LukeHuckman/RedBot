@@ -74,7 +74,7 @@ public class Bot {
                     "Ask again later",
                     "Better not tell you now",
                     "Cannot predict now",
-                    "Concentrate ans ask again",
+                    "Concentrate and ask again",
                     "Don't count on it",
                     "My reply is no",
                     "My sources say no",
@@ -112,13 +112,20 @@ public class Bot {
                         String text = rawTitle.get(i).toString().split(">")[1];
                         title+=text.substring(0, text.length()-6);
                     }
+                    Elements rawTags = Page.getData("tags");
+                    String tags="Tags:\n";
+                    for(int i=0;i<rawTags.size();i++){
+                        tags += rawTags.get(i).toString().split("<")[1].substring(18);
+                        if(i!=rawTags.size()-1)
+                            tags += ", ";
+                    }
                     Elements thumbnail = Page.getData("thumb"); //Get the thumbnail
                     
                     //Building the embed
                     EmbedBuilder embed = new EmbedBuilder();
                     embed.setImage(thumbnail.attr("data-src"));
                     embed.setTitle(title,"https://nhentai.net/g/"+magicNumber);
-                    embed.setDescription("#"+ magicNumber);
+                    embed.setDescription("#"+ magicNumber + "\n\n" + tags);
                     MessageEmbed hentaiEmbed = embed.build();
                     event.getChannel().sendMessage(hentaiEmbed).queue();
                 }

@@ -54,6 +54,9 @@ public class HParser {
             case "thumb":
                 data = doc.select("img[class]");
                 break;
+            case "tags":
+                data = doc.select("a[href*='/tag/'] span[class='name']");
+                break;
         }
         return data;
     }
