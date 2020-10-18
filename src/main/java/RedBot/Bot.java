@@ -58,7 +58,7 @@ public class Bot {
                 }
                 break;
             
-            case "8ball":
+            case "8ball": //Answers a yes or no question
                 String[] answer = new String[]{
                     "It is certain",
                     "It is decidedly so",
@@ -83,6 +83,27 @@ public class Bot {
                 };
                 event.getChannel().sendMessage(":8ball: "+answer[r.nextInt(answer.length-1)]).queue();
                 break;
+            
+            case "pick": //Chooses an option from a selection
+                switch (message.length) {
+                    case 1:
+                        event.getChannel().sendMessage("Usage: `d.pick <Option 1>, <Option 2> ...`").queue();
+                        break;
+                    case 2:
+                        event.getChannel().sendMessage("There isn't much of a choice, is there?").queue();
+                        break;
+                    default:
+                        String fullstring="";
+                        for(int i=1;i<message.length;i++)
+                            fullstring+=message[i]+" ";
+                        String[] choices = fullstring.split(", ");
+                        if(choices.length==1)
+                            choices = choices[0].split(",");
+                        for(int i=0;i<choices.length;i++)
+                        event.getChannel().sendMessage(choices[r.nextInt(choices.length)]).queue();
+                }
+                break;
+
             
             case "hentai": // TODO Optimise this train wreck
                 if(message.length==1 && event.getTextChannel().isNSFW())
@@ -154,8 +175,14 @@ public class Bot {
                 + "\n"
                 + "`d.8ball <optional question>`:\n"
                 + "Answers a yes/no question\n"
+                + "Example: `d.8ball is he horny?`\n"
+                + "\n"
+                + "`d.pick <option 1>, <option 2> ...:`\n"
+                + "Chooses an option from a given selection\n"
+                + "Example: `d.pick homework, left 4 dead`\n"
                 + "\n"
                 + "`d.hentai <term 1> <term 2> ...:`\n"
-                + "Gives a random hentai based on the terms";
+                + "Gives a random hentai based on the given terms\n"
+                + "Example: `d.hentai english catgirl`";
     }
 }
