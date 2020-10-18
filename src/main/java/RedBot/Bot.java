@@ -85,26 +85,51 @@ public class Bot {
                 break;
             
             case "pick": //Chooses an option from a selection
+                boolean makeDecision=false;
                 switch (message.length) {
                     case 1:
                         event.getChannel().sendMessage("Usage: `d.pick <Option 1>, <Option 2> ...`").queue();
                         break;
                     case 2:
-                        event.getChannel().sendMessage("There isn't much of a choice, is there?").queue();
+                        if(!message[1].contains(","))
+                            event.getChannel().sendMessage("There isn't much of a choice, is there?").queue();
+                        else
+                            makeDecision=true;
                         break;
                     default:
-                        String fullstring="";
+                        makeDecision=true;
+                }
+                if(makeDecision){
+                    String fullstring="";
                         for(int i=1;i<message.length;i++)
                             fullstring+=message[i]+" ";
+                        if(!fullstring.contains(",")){
+                            event.getChannel().sendMessage("Wrong syntax. Try using commas").queue();
+                            break;
+                        }
                         String[] choices = fullstring.split(", ");
                         if(choices.length==1)
                             choices = choices[0].split(",");
-                        for(int i=0;i<choices.length;i++)
+                        /* Duplicate check: Doesn't work for some reason
+                        
+                        boolean same = false;
+                 outer: for(int i=0;i<choices.length;i++){
+                            for(int j=i+1;j<choices.length;j++){
+                                if(choices[i].equalsIgnoreCase(choices[j])){
+                                    same = true;
+                                    break outer;
+                                }
+                            }
+                        }
+                        if(same)
+                            event.getChannel().sendMessage("Same options? That's unfair").queue();
+                        else
+                        */
                         event.getChannel().sendMessage(choices[r.nextInt(choices.length)]).queue();
                 }
                 break;
 
-            
+                
             case "hentai": // TODO Optimise this train wreck
                 if(message.length==1 && event.getTextChannel().isNSFW())
                     event.getChannel().sendMessage("Usage: `d.hentai <term 1> <term 2> ...`").queue();
