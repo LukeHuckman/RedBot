@@ -114,13 +114,12 @@ public class Bot {
                     }
                     Elements rawTags = Page.getData("tags");
                     String tags="Tags:\n";
-                    for(int i=0;i<rawTags.size();i++){
+                    for(int i=0;i<rawTags.size();i++){ //Extract the tags
                         tags += rawTags.get(i).toString().split("<")[1].substring(18);
                         if(i!=rawTags.size()-1)
                             tags += ", ";
                     }
                     Elements thumbnail = Page.getData("thumb"); //Get the thumbnail
-                    
                     //Building the embed
                     EmbedBuilder embed = new EmbedBuilder();
                     embed.setImage(thumbnail.attr("data-src"));

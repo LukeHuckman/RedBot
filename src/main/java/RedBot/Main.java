@@ -42,7 +42,7 @@ public class Main extends ListenerAdapter {
         //System.out.println(user+"("+userID+")"+": \""+message+"\"");
         if(message.startsWith("d."))
             bot.exec(event, user, userID,message.split(" ")[0].substring(2), message.split(" "));
-        if(message.contains("<@!") && !message.startsWith("d."))
+        if(message.contains("<@!") && !message.startsWith("d.") && !message.startsWith(">"))
             bot.mentionParse(event, message, userID);
     }
 }
