@@ -128,7 +128,6 @@ public class Bot {
                         event.getChannel().sendMessage(choices[r.nextInt(choices.length)]).queue();
                 }
                 break;
-
                 
             case "hentai": // TODO Optimise this train wreck
                 if(message.length==1 && event.getTextChannel().isNSFW())
@@ -175,6 +174,7 @@ public class Bot {
                     event.getChannel().sendMessage(hentaiEmbed).queue();
                 }
                 break;
+                
             default:
                 event.getChannel().sendMessage("Unknown command. "
                         + "Use `d.help` to see available commands").queue();

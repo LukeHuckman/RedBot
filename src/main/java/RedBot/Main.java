@@ -39,7 +39,6 @@ public class Main extends ListenerAdapter {
         String user = event.getAuthor().getAsTag();
         String userID = event.getAuthor().getId();
         String message = event.getMessage().getContentRaw();
-        //System.out.println(user+"("+userID+")"+": \""+message+"\"");
         if(message.startsWith("d."))
             bot.exec(event, user, userID,message.split(" ")[0].substring(2), message.split(" "));
         if(message.contains("<@!") && !message.startsWith("d.") && !message.startsWith(">"))

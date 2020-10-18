@@ -11,6 +11,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 public class HParser {
+    
     private static String source="";
 
     public HParser(String url) {
@@ -24,7 +25,6 @@ public class HParser {
             br = new BufferedReader(new InputStreamReader(is));
 
             while ((line = br.readLine()) != null) {
-                //System.out.println(line);
                 source+=line;
             }
         } catch (MalformedURLException mue) {
@@ -34,9 +34,7 @@ public class HParser {
         } finally {
             try {
                 if (is != null) is.close();
-            } catch (IOException ioe) {
-                // nothing to see here
-            }
+            } catch (IOException ioe) {}
         }
         this.source = source;
     }
@@ -60,6 +58,4 @@ public class HParser {
         }
         return data;
     }
-    
-    
 }
