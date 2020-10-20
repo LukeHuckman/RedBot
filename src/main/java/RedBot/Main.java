@@ -24,7 +24,7 @@ public class Main extends ListenerAdapter {
         }catch(FileNotFoundException e){
             System.out.println("\"botInfo.txt\" not found!\n\n"
                     + "Create a \"botInfo.txt\" file in the bin folder\n"
-                    + "containing two lines about your bot:\n"
+                    + "containing three lines about your bot:\n"
                     + "\n"
                     + "<Bot token>\n"
                     + "<Bot ID (snowflake)>\n"
