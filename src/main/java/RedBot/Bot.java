@@ -239,10 +239,13 @@ public class Bot {
                     String line = "", output = "";
                     while((line=buf.readLine())!=null) //Output from the command
                         output+=line+"\n";
-                    String[] status = output.split("\\r?\\n");
-                    event.getJDA().getPresence().setPresence(Activity
-                        .watching(status[2].split(" ")[1].split("/")[0]
-                                + " Minecraft players"),true);
+                    String playerNum = output.split("\\r?\\n")[2].split(" ")[1].split("/")[0];
+                    if(playerNum.equals("1"))
+                        event.getJDA().getPresence().setPresence(Activity
+                            .watching(playerNum + " Minecraft player"),true);
+                    else
+                        event.getJDA().getPresence().setPresence(Activity
+                            .watching(playerNum + " Minecraft players"),true);
                 } catch (IOException | ArrayIndexOutOfBoundsException ex) { //When the server goes offline
                     event.getJDA().getPresence().setActivity(null);
                 } catch (InterruptedException ex) {}
