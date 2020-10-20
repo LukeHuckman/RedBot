@@ -100,7 +100,7 @@ public class Bot {
                         event.getChannel().sendMessage("Usage: `d.pick <Option 1>, <Option 2> ...`").queue();
                         break;
                     case 2:
-                        if(!message[1].contains(","))
+                        if(!message[1].contains(",")) //When there's only one option
                             event.getChannel().sendMessage("There isn't much of a choice, is there?").queue();
                         else
                             makeDecision=true;
@@ -108,7 +108,7 @@ public class Bot {
                     default:
                         makeDecision=true;
                 }
-                if(makeDecision){
+                if(makeDecision){ //Controls whether decision making is actually required
                     String fullstring="";
                         for(int i=1;i<message.length;i++)
                             fullstring+=message[i]+" ";
@@ -187,14 +187,14 @@ public class Bot {
             case "mc":
             case "minecraft":
                 try { // Shows info on the Minecraft server
-                    String[] shellCommand = {"bash","-c","mcstatus localhost status"};
+                    String[] shellCommand = {"bash","-c","mcstatus localhost status"}; //pip install mcstatus
                     ProcessBuilder p = new ProcessBuilder(shellCommand);
                     Process pr = p.start();
-                    if(!pr.waitFor(2, TimeUnit.SECONDS))
+                    if(!pr.waitFor(2, TimeUnit.SECONDS)) //Failsafe if the command takes too long to execute
                         pr.destroy();
                     BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
                     String line = "", output = "";
-                    while((line=buf.readLine())!=null)
+                    while((line=buf.readLine())!=null) //Output from the command
                         output+=line+"\n";
                     String[] status = output.split("\\r?\\n");
                     event.getChannel()
@@ -203,7 +203,7 @@ public class Bot {
                                         + "Version: " + status[0].split(" ")[1].substring(1)
                                             + " " + status[0].split(" ")[2] + "\n"
                                         + "Players: " + status[2].split(" ")[1]).queue();
-                } catch (IOException | ArrayIndexOutOfBoundsException ex) {
+                } catch (IOException | ArrayIndexOutOfBoundsException ex) { //When the server goes offline
                     event.getChannel().sendMessage("Server is offline").queue();
                 } catch (InterruptedException ex) {}
                 break;
@@ -230,20 +230,20 @@ public class Bot {
         new Timer().schedule(new TimerTask(){
             public void run(){
                 try { // Show numbers of Minecraft players online as presence status
-                    String[] command = {"bash","-c","mcstatus localhost status"};
+                    String[] command = {"bash","-c","mcstatus localhost status"}; //pip install mcstatus
                     ProcessBuilder p = new ProcessBuilder(command);
                     Process pr = p.start();
-                    if(!pr.waitFor(2, TimeUnit.SECONDS))
+                    if(!pr.waitFor(2, TimeUnit.SECONDS)) //Failsafe if the command takes too long to execute
                         pr.destroy();
                     BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
                     String line = "", output = "";
-                    while((line=buf.readLine())!=null)
+                    while((line=buf.readLine())!=null) //Output from the command
                         output+=line+"\n";
                     String[] status = output.split("\\r?\\n");
                     event.getJDA().getPresence().setPresence(Activity
                         .watching(status[2].split(" ")[1].split("/")[0]
                                 + " Minecraft players"),true);
-                } catch (IOException | ArrayIndexOutOfBoundsException ex) {
+                } catch (IOException | ArrayIndexOutOfBoundsException ex) { //When the server goes offline
                     event.getJDA().getPresence().setActivity(null);
                 } catch (InterruptedException ex) {}
             }
