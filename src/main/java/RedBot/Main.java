@@ -6,17 +6,19 @@ import java.util.Scanner;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class Main extends ListenerAdapter {
-    static String prefix = "d."; static String botID; Bot bot = new Bot(); 
+    static String prefix = "d."; static String botID; public static String mcAddress; Bot bot = new Bot(); 
     public static void main(String[] args) throws LoginException{
         JDABuilder builder = new JDABuilder(AccountType.BOT);
         try{
             Scanner botInfo = new Scanner(new FileInputStream("botInfo.txt"));
             builder.setToken(botInfo.nextLine());
             botID = botInfo.nextLine();
+            mcAddress = botInfo.nextLine();
             builder.addEventListeners(new Main());
             builder.build();
         }catch(FileNotFoundException e){
@@ -26,10 +28,16 @@ public class Main extends ListenerAdapter {
                     + "\n"
                     + "<Bot token>\n"
                     + "<Bot ID (snowflake)>\n"
+                    + "<Minecraft server IP>\n"
                     + "\n"
                     + "Restart the application after doing so.");
             System.exit(0);
         }
+    }
+    
+    @Override
+    public void onReady(ReadyEvent event){
+        bot.mcStatusPresence(event);
     }
     
     @Override

@@ -1,10 +1,18 @@
 package RedBot;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jsoup.select.Elements;
 
@@ -85,6 +93,7 @@ public class Bot {
                 break;
             
             case "pick": //Chooses an option from a selection
+            case "choose":
                 boolean makeDecision=false;
                 switch (message.length) {
                     case 1:
@@ -175,6 +184,30 @@ public class Bot {
                 }
                 break;
                 
+            case "mc":
+            case "minecraft":
+                try { // Shows info on the Minecraft server
+                    String[] shellCommand = {"bash","-c","mcstatus localhost status"};
+                    ProcessBuilder p = new ProcessBuilder(shellCommand);
+                    Process pr = p.start();
+                    if(!pr.waitFor(2, TimeUnit.SECONDS))
+                        pr.destroy();
+                    BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+                    String line = "", output = "";
+                    while((line=buf.readLine())!=null)
+                        output+=line+"\n";
+                    String[] status = output.split("\\r?\\n");
+                    event.getChannel()
+                            .sendMessage("Server is online\n"
+                                        + "IP: `" + Main.mcAddress + "`\n"
+                                        + "Version: " + status[0].split(" ")[1].substring(1)
+                                            + " " + status[0].split(" ")[2] + "\n"
+                                        + "Players: " + status[2].split(" ")[1]).queue();
+                } catch (IOException | ArrayIndexOutOfBoundsException ex) {
+                    event.getChannel().sendMessage("Server is offline").queue();
+                } catch (InterruptedException ex) {}
+                break;
+                
             default:
                 event.getChannel().sendMessage("Unknown command. "
                         + "Use `d.help` to see available commands").queue();
@@ -193,6 +226,30 @@ public class Bot {
                 }
     }
     
+    public void mcStatusPresence(ReadyEvent event){
+        new Timer().schedule(new TimerTask(){
+            public void run(){
+                try { // Show numbers of Minecraft players online as presence status
+                    String[] command = {"bash","-c","mcstatus localhost status"};
+                    ProcessBuilder p = new ProcessBuilder(command);
+                    Process pr = p.start();
+                    if(!pr.waitFor(2, TimeUnit.SECONDS))
+                        pr.destroy();
+                    BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+                    String line = "", output = "";
+                    while((line=buf.readLine())!=null)
+                        output+=line+"\n";
+                    String[] status = output.split("\\r?\\n");
+                    event.getJDA().getPresence().setPresence(Activity
+                        .watching(status[2].split(" ")[1].split("/")[0]
+                                + " Minecraft players"),true);
+                } catch (IOException | ArrayIndexOutOfBoundsException ex) {
+                    event.getJDA().getPresence().setActivity(null);
+                } catch (InterruptedException ex) {}
+            }
+        },0,10000);
+    }
+    
     public String help(){
         return 
                 "`d.quote random` or `d.quote @user`:\n"
@@ -202,12 +259,15 @@ public class Bot {
                 + "Answers a yes/no question\n"
                 + "Example: `d.8ball is he horny?`\n"
                 + "\n"
-                + "`d.pick <option 1>, <option 2> ...:`\n"
+                + "`d.pick <option 1>, <option 2> ...`:\n"
                 + "Chooses an option from a given selection\n"
                 + "Example: `d.pick homework, left 4 dead`\n"
                 + "\n"
-                + "`d.hentai <term 1> <term 2> ...:`\n"
+                + "`d.hentai <term 1> <term 2> ...`:\n"
                 + "Gives a random hentai based on the given terms\n"
-                + "Example: `d.hentai english catgirl`";
+                + "Example: `d.hentai english catgirl`\n"
+                + "\n"
+                + "`d.minecraft`:\n"
+                + "Shows info and/or status of the Minecraft server";
     }
 }
