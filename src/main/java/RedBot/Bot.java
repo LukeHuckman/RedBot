@@ -87,12 +87,20 @@ public class Bot {
                     "My reply is no",
                     "My sources say no",
                     "Outlook not so good",
-                    "Very doubtful"
+                    "Very doubtful", 
+                    //shit after here is added by Egg
+                    "Are you sure you want to ask that?",
+                    "Perhaps",
+                    "Sure, why not eh",
+                    "Absolutely not you donkey!",
+                    "Stop asking me dumb questions"
+                    "Wow, that is actually a good question, FINALLY!"
+                    "Tbh, I have no idea."
                 };
                 event.getChannel().sendMessage(":8ball: "+answer[r.nextInt(answer.length-1)]).queue();
                 break;
             
-            case "pick": //Chooses an option from a selection
+            case "pick": //Chooses an option from a selection      me when finding the right hentai
             case "choose":
                 boolean makeDecision=false;
                 switch (message.length) {
@@ -119,7 +127,7 @@ public class Bot {
                         String[] choices = fullstring.split(", ");
                         if(choices.length==1)
                             choices = choices[0].split(",");
-                        /* Duplicate check: Doesn't work for some reason
+                        /* Duplicate check: Doesn't work for some reason    :pensive:
                         
                         boolean same = false;
                  outer: for(int i=0;i<choices.length;i++){
@@ -138,7 +146,7 @@ public class Bot {
                 }
                 break;
                 
-            case "hentai": // TODO Optimise this train wreck
+            case "hentai": // TODO Optimise this train wreck            Good fucking luck lmao -Egg
                 if(message.length==1 && event.getTextChannel().isNSFW())
                     event.getChannel().sendMessage("Usage: `d.hentai <term 1> <term 2> ...`").queue();
                 else if(!event.getTextChannel().isNSFW()){
@@ -173,7 +181,7 @@ public class Bot {
                         if(i!=rawTags.size()-1)
                             tags += ", ";
                     }
-                    Elements thumbnail = Page.getData("thumb"); //Get the thumbnail
+                    Elements thumbnail = Page.getData("thumb"); //Get the thumbnail ( ͡° ͜ʖ ͡°)
                     //Building the embed
                     EmbedBuilder embed = new EmbedBuilder();
                     embed.setImage(thumbnail.attr("data-src"));
@@ -186,7 +194,7 @@ public class Bot {
                 
             case "mc":
             case "minecraft":
-                try { // Shows info on the Minecraft server
+                try { // Shows info on the Minecraft server         rip -Egg
                     String[] shellCommand = {"bash","-c","mcstatus localhost status"}; //pip install mcstatus
                     ProcessBuilder p = new ProcessBuilder(shellCommand);
                     Process pr = p.start();
@@ -276,5 +284,6 @@ public class Bot {
                 + "\n"
                 + "`d.minecraft`:\n"
                 + "Shows info and/or status of the Minecraft server";
-    }
+                + "or just ping MiloAddict";
+    }  //You expected a comment but it was me DIO!
 }
