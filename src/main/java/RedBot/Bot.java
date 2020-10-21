@@ -36,9 +36,9 @@ public class Bot {
                                     .complete().getRetrievedHistory();
                     if(message[1].startsWith("<@!")){ //Quote of a paricular user
                         if(event.getMessage().getMentionedMembers().get(0).getUser().isBot()){
-                        event.getChannel().sendMessage("I can't quote bots").queue();
-                        return; //To prevent infinite loops
-                    }
+                            event.getChannel().sendMessage("I can't quote bots").queue();
+                            return; //To prevent infinite loops
+                        }
                         for(int i=0;i<postHistory.size();i++){
                             int random = r.nextInt(postHistory.size()-1);
                             Message post = postHistory.get(random);
