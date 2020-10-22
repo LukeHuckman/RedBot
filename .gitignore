@@ -1,2 +1,8 @@
 /botInfo.txt
 /build/
+/bin/
+/.gradle/
+.classpath
+.project
+.settings/org.eclipse.buildship.core.prefs
+.vscode/settings.json
