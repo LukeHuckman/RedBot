@@ -11,3 +11,4 @@ Requires Dinnerbone's [mcstatus](https://github.com/Dinnerbone/mcstatus) for the
 * Magic 8-ball
 * Minecraft server status
 * A NSFW command
+* Polls

@@ -1,5 +1,6 @@
 package RedBot;
 
+import java.lang.Character;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -93,8 +94,8 @@ public class Bot {
                     "Perhaps",
                     "Sure, why not eh",
                     "Absolutely not you donkey!",
-                    "Stop asking me dumb questions"
-                    "Wow, that is actually a good question, FINALLY!"
+                    "Stop asking me dumb questions",
+                    "Wow, that is actually a good question, FINALLY!",
                     "Tbh, I have no idea."
                 };
                 event.getChannel().sendMessage(":8ball: "+answer[r.nextInt(answer.length-1)]).queue();
@@ -215,7 +216,39 @@ public class Bot {
                     event.getChannel().sendMessage("Server is offline").queue();
                 } catch (InterruptedException ex) {}
                 break;
-                
+
+            case "poll":
+                EmbedBuilder embed = new EmbedBuilder(); //new embed, sure
+                try{ //hacky way to make sure topic is available
+                    embed.setTitle(message[1]); //topic as title
+                } catch (ArrayIndexOutOfBoundsException ex) { //yes
+                    event.getChannel().sendMessage("`d.poll <topic> <option1> <option2> <...>`").queue(); //uwu
+                    break; //am i coding dad
+                } //no
+                embed.setColor(0x2f3136); //bravo six going dark
+                embed.setAuthor(user); //user is author. makes sense
+                for(int i=2;i<message.length;i++){ //for every non command, non topic words, do stuff
+                    StringBuffer sbubby = new StringBuffer(); //prepare to make emote
+                    int num = i + 47; //math
+                    sbubby.append(Character.toChars(num)); //first part of the meth
+                    sbubby.append(Character.toChars(0xfe0f)); //second part
+                    sbubby.append(Character.toChars(0x20e3)); //grand finale
+                    embed.addField("Choice "+ sbubby, message[i], false); //now with a Netflix adaptation
+                } //rinse and repeat until you get Grammy's
+//empty line lol
+                MessageEmbed pollembed = embed.build(); //finally, embed is done
+                event.getChannel().sendMessage(pollembed).queue(sentmessage -> { //send message but also do stuff after
+                    for(int i=2;i<message.length;i++){ //for every your mom i explained this last time
+                        StringBuffer sbubby = new StringBuffer(); //yadayada same thing
+                        int num = i + 47; //is anime over yet
+                        sbubby.append(Character.toChars(num)); //this game is great help my son is dying of stage 4 cancer
+                        sbubby.append(Character.toChars(0xfe0f)); //i am speed
+                        sbubby.append(Character.toChars(0x20e3)); //are we there yet
+                        sentmessage.addReaction(sbubby.toString()).queue(); //finally, sending the reactions
+                    } //now do it another couple hundred times
+                }); //we done wtf
+                break; //bork what do
+
             default:
                 event.getChannel().sendMessage("Unknown command. "
                         + "Use `d.help` to see available commands").queue();
@@ -283,7 +316,11 @@ public class Bot {
                 + "Example: `d.hentai english catgirl`\n"
                 + "\n"
                 + "`d.minecraft`:\n"
-                + "Shows info and/or status of the Minecraft server";
+                + "Shows info and/or status of the Minecraft server\n"
+                + "\n"
+                + "`d.poll <topic> <choice1> <choice2>`:\n"
+                + "Creates a poll for your fellow humans to vote on\n"
+                + "\n"
                 + "or just ping MiloAddict";
     }  //You expected a comment but it was me DIO!
 }
