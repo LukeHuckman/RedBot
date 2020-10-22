@@ -88,20 +88,12 @@ public class Bot {
                     "My reply is no",
                     "My sources say no",
                     "Outlook not so good",
-                    "Very doubtful", 
-                    //shit after here is added by Egg
-                    "Are you sure you want to ask that?",
-                    "Perhaps",
-                    "Sure, why not eh",
-                    "Absolutely not you donkey!",
-                    "Stop asking me dumb questions",
-                    "Wow, that is actually a good question, FINALLY!",
-                    "Tbh, I have no idea."
+                    "Very doubtful"
                 };
                 event.getChannel().sendMessage(":8ball: "+answer[r.nextInt(answer.length-1)]).queue();
                 break;
             
-            case "pick": //Chooses an option from a selection      me when finding the right hentai
+            case "pick": //Chooses an option from a selection
             case "choose":
                 boolean makeDecision=false;
                 switch (message.length) {
@@ -128,7 +120,7 @@ public class Bot {
                         String[] choices = fullstring.split(", ");
                         if(choices.length==1)
                             choices = choices[0].split(",");
-                        /* Duplicate check: Doesn't work for some reason    :pensive:
+                        /* Duplicate check: Doesn't work for some reason
                         
                         boolean same = false;
                  outer: for(int i=0;i<choices.length;i++){
@@ -147,7 +139,7 @@ public class Bot {
                 }
                 break;
                 
-            case "hentai": // TODO Optimise this train wreck            Good fucking luck lmao -Egg
+            case "hentai": // TODO Optimise this train wreck
                 if(message.length==1 && event.getTextChannel().isNSFW())
                     event.getChannel().sendMessage("Usage: `d.hentai <term 1> <term 2> ...`").queue();
                 else if(!event.getTextChannel().isNSFW()){
@@ -182,7 +174,7 @@ public class Bot {
                         if(i!=rawTags.size()-1)
                             tags += ", ";
                     }
-                    Elements thumbnail = Page.getData("thumb"); //Get the thumbnail ( ͡° ͜ʖ ͡°)
+                    Elements thumbnail = Page.getData("thumb"); //Get the thumbnail
                     //Building the embed
                     EmbedBuilder embed = new EmbedBuilder();
                     embed.setImage(thumbnail.attr("data-src"));
@@ -195,7 +187,7 @@ public class Bot {
                 
             case "mc":
             case "minecraft":
-                try { // Shows info on the Minecraft server         rip -Egg
+                try { // Shows info on the Minecraft server 
                     String[] shellCommand = {"bash","-c","mcstatus localhost status"}; //pip install mcstatus
                     ProcessBuilder p = new ProcessBuilder(shellCommand);
                     Process pr = p.start();
@@ -218,36 +210,35 @@ public class Bot {
                 break;
 
             case "poll":
-                EmbedBuilder embed = new EmbedBuilder(); //new embed, sure
-                try{ //hacky way to make sure topic is available
-                    embed.setTitle(message[1]); //topic as title
-                } catch (ArrayIndexOutOfBoundsException ex) { //yes
-                    event.getChannel().sendMessage("`d.poll <topic> <option1> <option2> <...>`").queue(); //uwu
-                    break; //am i coding dad
-                } //no
-                embed.setColor(0x2f3136); //bravo six going dark
-                embed.setAuthor(user); //user is author. makes sense
-                for(int i=2;i<message.length;i++){ //for every non command, non topic words, do stuff
-                    StringBuffer sbubby = new StringBuffer(); //prepare to make emote
-                    int num = i + 47; //math
-                    sbubby.append(Character.toChars(num)); //first part of the meth
-                    sbubby.append(Character.toChars(0xfe0f)); //second part
-                    sbubby.append(Character.toChars(0x20e3)); //grand finale
-                    embed.addField("Choice "+ sbubby, message[i], false); //now with a Netflix adaptation
-                } //rinse and repeat until you get Grammy's
-//empty line lol
-                MessageEmbed pollembed = embed.build(); //finally, embed is done
-                event.getChannel().sendMessage(pollembed).queue(sentmessage -> { //send message but also do stuff after
-                    for(int i=2;i<message.length;i++){ //for every your mom i explained this last time
-                        StringBuffer sbubby = new StringBuffer(); //yadayada same thing
-                        int num = i + 47; //is anime over yet
-                        sbubby.append(Character.toChars(num)); //this game is great help my son is dying of stage 4 cancer
-                        sbubby.append(Character.toChars(0xfe0f)); //i am speed
-                        sbubby.append(Character.toChars(0x20e3)); //are we there yet
-                        sentmessage.addReaction(sbubby.toString()).queue(); //finally, sending the reactions
-                    } //now do it another couple hundred times
-                }); //we done wtf
-                break; //bork what do
+                EmbedBuilder embed = new EmbedBuilder(); //initiates the building of embed
+                try{ //it tries to run whatever in the {} and if there's an error in the {}, it runs the thing in catch{}
+                    embed.setTitle(message[1]); //sets the title of the embed
+                } catch (ArrayIndexOutOfBoundsException ex) { //the error if some unexpected shit happens(f an unexpected error happens then the error will give a traceback and the command will fail)
+                    event.getChannel().sendMessage("`d.poll <topic> <option1> <option2> <...>`").queue(); //sends the poll to the chat
+                    break; //ends the loop thingy
+                } 
+                embed.setColor(0x2f3136); //sets the color of the embed to the same as discord dark mode bg
+                embed.setAuthor(user); //sets the author of the embed, usually the user
+                for(int i=2;i<message.length;i++){ // iterate from the third word of the command cause d.poll topic option, it takes the option.
+                    StringBuffer sbubby = new StringBuffer(); //initiates a stringbuffer that will be used to create an emote
+                    int num = i + 47; //the poll reaction emote 
+                    sbubby.append(Character.toChars(num)); //append stuff that will eventually become the string
+                    sbubby.append(Character.toChars(0xfe0f)); //append stuff that will eventually become the string
+                    sbubby.append(Character.toChars(0x20e3)); //append stuff that will eventually become the string
+                    embed.addField("Choice "+ sbubby, message[i], false); //append stuff that will eventually become the string
+                } //keep looping until i is longer than the msg
+                MessageEmbed pollembed = embed.build(); //embed is done
+                event.getChannel().sendMessage(pollembed).queue(sentmessage -> { //sends the poll to the chat
+                    for(int i=2;i<message.length;i++){
+                        StringBuffer sbubby = new StringBuffer(); 
+                        int num = i + 47; //refer above
+                        sbubby.append(Character.toChars(num)); 
+                        sbubby.append(Character.toChars(0xfe0f)); 
+                        sbubby.append(Character.toChars(0x20e3)); 
+                        sentmessage.addReaction(sbubby.toString()).queue(); //sends the reactions
+                    } //repeats
+                }); // comments by egg with the guidance of med (idk if the comments are accurate or not)
+                break; //ends loop or something
 
             default:
                 event.getChannel().sendMessage("Unknown command. "
@@ -319,8 +310,7 @@ public class Bot {
                 + "Shows info and/or status of the Minecraft server\n"
                 + "\n"
                 + "`d.poll <topic> <choice1> <choice2>`:\n"
-                + "Creates a poll for your fellow humans to vote on\n"
-                + "\n"
-                + "or just ping MiloAddict";
-    }  //You expected a comment but it was me DIO!
+                + "Creates a poll for your fellow humans to vote on.";
+              
+    } 
 }
