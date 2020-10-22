@@ -120,7 +120,7 @@ public class Bot {
                         String[] choices = fullstring.split(", ");
                         if(choices.length==1)
                             choices = choices[0].split(",");
-                        /* Duplicate check: Doesn't work for some reason       why not just make it if option1 = option2, break;
+                        /* Duplicate check: Doesn't work for some reason
                         
                         boolean same = false;
                  outer: for(int i=0;i<choices.length;i++){
@@ -149,7 +149,7 @@ public class Bot {
                     String url = "https://nhentai.net/search/?q=";
                     for(int i=1;i<message.length;i++)
                         url +=message[i]+"+";
-                    HParser Page = new HParser(url); //Get the first page of results  why not sort by popularity? -egg
+                    HParser Page = new HParser(url); //Get the first page of results
                     Elements links = Page.getData("link");
                     //Get the total number of results pages
                     String lastpage[] = links.last().attr("href").split("=");
@@ -229,12 +229,12 @@ public class Bot {
                 } //keep looping until i is longer than the msg
                 MessageEmbed pollembed = embed.build(); //embed is done
                 event.getChannel().sendMessage(pollembed).queue(sentmessage -> { //sends the poll to the chat
-                    for(int i=2;i<message.length;i++){ //refer above
-                        StringBuffer sbubby = new StringBuffer(); /refer above
+                    for(int i=2;i<message.length;i++){
+                        StringBuffer sbubby = new StringBuffer(); 
                         int num = i + 47; //refer above
-                        sbubby.append(Character.toChars(num)); //refer above
-                        sbubby.append(Character.toChars(0xfe0f)); //refer above
-                        sbubby.append(Character.toChars(0x20e3)); //refer above
+                        sbubby.append(Character.toChars(num)); 
+                        sbubby.append(Character.toChars(0xfe0f)); 
+                        sbubby.append(Character.toChars(0x20e3)); 
                         sentmessage.addReaction(sbubby.toString()).queue(); //sends the reactions
                     } //repeats
                 }); // comments by egg with the guidance of med (idk if the comments are accurate or not)
@@ -310,7 +310,7 @@ public class Bot {
                 + "Shows info and/or status of the Minecraft server\n"
                 + "\n"
                 + "`d.poll <topic> <choice1> <choice2>`:\n"
-                + "Creates a poll for your fellow humans to vote on."
+                + "Creates a poll for your fellow humans to vote on.";
               
     } 
 }
