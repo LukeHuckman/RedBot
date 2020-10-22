@@ -139,7 +139,7 @@ public class Bot {
                 }
                 break;
                 
-            case "hentai": // TODO Optimise this train wreck   
+            case "hentai": // TODO Optimise this train wreck
                 if(message.length==1 && event.getTextChannel().isNSFW())
                     event.getChannel().sendMessage("Usage: `d.hentai <term 1> <term 2> ...`").queue();
                 else if(!event.getTextChannel().isNSFW()){
@@ -236,7 +236,7 @@ public class Bot {
                         sbubby.append(Character.toChars(0xfe0f)); //refer above
                         sbubby.append(Character.toChars(0x20e3)); //refer above
                         sentmessage.addReaction(sbubby.toString()).queue(); //sends the reactions
-                    } //repeats 
+                    } //repeats
                 }); // comments by egg with the guidance of med (idk if the comments are accurate or not)
                 break; //ends loop or something
 
