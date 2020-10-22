@@ -219,7 +219,12 @@ public class Bot {
 
             case "poll":
                 EmbedBuilder embed = new EmbedBuilder(); //new embed, sure
-                embed.setTitle(message[1]); //topic as title
+                try{ //hacky way to make sure topic is available
+                    embed.setTitle(message[1]); //topic as title
+                } catch (ArrayIndexOutOfBoundsException ex) { //yes
+                    event.getChannel().sendMessage("`d.poll <topic> <option1> <option2> <...>`").queue(); //uwu
+                    break; //am i coding dad
+                } //no
                 embed.setColor(0x2f3136); //bravo six going dark
                 embed.setAuthor(user); //user is author. makes sense
                 for(int i=2;i<message.length;i++){ //for every non command, non topic words, do stuff
