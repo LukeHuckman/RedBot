@@ -93,7 +93,7 @@ public class Bot {
                 event.getChannel().sendMessage(":8ball: "+answer[r.nextInt(answer.length-1)]).queue();
                 break;
             
-            case "pick": //Chooses an option from a selection      me when finding the right hentai
+            case "pick": //Chooses an option from a selection
             case "choose":
                 boolean makeDecision=false;
                 switch (message.length) {
@@ -237,7 +237,7 @@ public class Bot {
                         sbubby.append(Character.toChars(0x20e3)); //refer above
                         sentmessage.addReaction(sbubby.toString()).queue(); //sends the reactions
                     } //repeats 
-                }); // comments by egg with the guidance of med
+                }); // comments by egg with the guidance of med (idk if the comments are accurate or not)
                 break; //ends loop or something
 
             default:
