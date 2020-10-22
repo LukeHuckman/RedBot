@@ -187,7 +187,7 @@ public class Bot {
                 
             case "mc":
             case "minecraft":
-                try { // Shows info on the Minecraft server 
+                try { // Shows info on the Minecraft server
                     String[] shellCommand = {"bash","-c","mcstatus localhost status"}; //pip install mcstatus
                     ProcessBuilder p = new ProcessBuilder(shellCommand);
                     Process pr = p.start();
