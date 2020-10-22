@@ -1,5 +1,6 @@
 package RedBot;
 
+import java.lang.Character;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -93,8 +94,8 @@ public class Bot {
                     "Perhaps",
                     "Sure, why not eh",
                     "Absolutely not you donkey!",
-                    "Stop asking me dumb questions"
-                    "Wow, that is actually a good question, FINALLY!"
+                    "Stop asking me dumb questions",
+                    "Wow, that is actually a good question, FINALLY!",
                     "Tbh, I have no idea."
                 };
                 event.getChannel().sendMessage(":8ball: "+answer[r.nextInt(answer.length-1)]).queue();
@@ -215,7 +216,34 @@ public class Bot {
                     event.getChannel().sendMessage("Server is offline").queue();
                 } catch (InterruptedException ex) {}
                 break;
-                
+
+            case "poll":
+                EmbedBuilder embed = new EmbedBuilder();
+                embed.setTitle(message[1]);
+                embed.setColor(0x2f3136);
+                embed.setAuthor(user);
+                for(int i=1;i<message.length;i++){
+                    StringBuffer sbubby = new StringBuffer();
+                    int num = i + 48;
+                    sbubby.append(Character.toChars(num));
+                    sbubby.append(Character.toChars(0xfe0f));
+                    sbubby.append(Character.toChars(0x20e3));
+                    embed.addField("Choice "+ sbubby, message[i], false);
+                }
+                    
+                MessageEmbed pollembed = embed.build();
+                event.getChannel().sendMessage(pollembed).queue(sentmessage -> {
+                    for(int i=1;i<message.length;i++){
+                        StringBuffer sbubby = new StringBuffer();
+                        int num = i + 48;
+                        sbubby.append(Character.toChars(num));
+                        sbubby.append(Character.toChars(0xfe0f));
+                        sbubby.append(Character.toChars(0x20e3));
+                        sentmessage.addReaction(sbubby.toString()).queue();
+                    }
+                });
+                break;
+
             default:
                 event.getChannel().sendMessage("Unknown command. "
                         + "Use `d.help` to see available commands").queue();
@@ -283,7 +311,7 @@ public class Bot {
                 + "Example: `d.hentai english catgirl`\n"
                 + "\n"
                 + "`d.minecraft`:\n"
-                + "Shows info and/or status of the Minecraft server";
+                + "Shows info and/or status of the Minecraft server\n"
                 + "or just ping MiloAddict";
     }  //You expected a comment but it was me DIO!
 }
