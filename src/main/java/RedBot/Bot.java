@@ -312,6 +312,10 @@ public class Bot {
                 + "\n"
                 + "`d.minecraft`:\n"
                 + "Shows info and/or status of the Minecraft server\n"
+                + "\n"
+                + "`d.poll <topic> <choice1> <choice2>`:\n"
+                + "Creates a poll for your fellow humans to vote on\n"
+                + "\n"
                 + "or just ping MiloAddict";
     }  //You expected a comment but it was me DIO!
 }
