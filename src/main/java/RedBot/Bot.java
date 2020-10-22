@@ -222,9 +222,9 @@ public class Bot {
                 embed.setTitle(message[1]);
                 embed.setColor(0x2f3136);
                 embed.setAuthor(user);
-                for(int i=1;i<message.length;i++){
+                for(int i=2;i<message.length;i++){
                     StringBuffer sbubby = new StringBuffer();
-                    int num = i + 48;
+                    int num = i + 47;
                     sbubby.append(Character.toChars(num));
                     sbubby.append(Character.toChars(0xfe0f));
                     sbubby.append(Character.toChars(0x20e3));
@@ -233,9 +233,9 @@ public class Bot {
                     
                 MessageEmbed pollembed = embed.build();
                 event.getChannel().sendMessage(pollembed).queue(sentmessage -> {
-                    for(int i=1;i<message.length;i++){
+                    for(int i=2;i<message.length;i++){
                         StringBuffer sbubby = new StringBuffer();
-                        int num = i + 48;
+                        int num = i + 47;
                         sbubby.append(Character.toChars(num));
                         sbubby.append(Character.toChars(0xfe0f));
                         sbubby.append(Character.toChars(0x20e3));
