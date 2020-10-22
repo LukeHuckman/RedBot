@@ -218,31 +218,31 @@ public class Bot {
                 break;
 
             case "poll":
-                EmbedBuilder embed = new EmbedBuilder();
-                embed.setTitle(message[1]);
-                embed.setColor(0x2f3136);
-                embed.setAuthor(user);
-                for(int i=2;i<message.length;i++){
-                    StringBuffer sbubby = new StringBuffer();
-                    int num = i + 47;
-                    sbubby.append(Character.toChars(num));
-                    sbubby.append(Character.toChars(0xfe0f));
-                    sbubby.append(Character.toChars(0x20e3));
-                    embed.addField("Choice "+ sbubby, message[i], false);
-                }
-                    
-                MessageEmbed pollembed = embed.build();
-                event.getChannel().sendMessage(pollembed).queue(sentmessage -> {
-                    for(int i=2;i<message.length;i++){
-                        StringBuffer sbubby = new StringBuffer();
-                        int num = i + 47;
-                        sbubby.append(Character.toChars(num));
-                        sbubby.append(Character.toChars(0xfe0f));
-                        sbubby.append(Character.toChars(0x20e3));
-                        sentmessage.addReaction(sbubby.toString()).queue();
-                    }
-                });
-                break;
+                EmbedBuilder embed = new EmbedBuilder(); //new embed, sure
+                embed.setTitle(message[1]); //topic as title
+                embed.setColor(0x2f3136); //bravo six going dark
+                embed.setAuthor(user); //user is author. makes sense
+                for(int i=2;i<message.length;i++){ //for every non command, non topic words, do stuff
+                    StringBuffer sbubby = new StringBuffer(); //prepare to make emote
+                    int num = i + 47; //math
+                    sbubby.append(Character.toChars(num)); //first part of the meth
+                    sbubby.append(Character.toChars(0xfe0f)); //second part
+                    sbubby.append(Character.toChars(0x20e3)); //grand finale
+                    embed.addField("Choice "+ sbubby, message[i], false); //now with a Netflix adaptation
+                } //rinse and repeat until you get Grammy's
+//empty line lol
+                MessageEmbed pollembed = embed.build(); //finally, embed is done
+                event.getChannel().sendMessage(pollembed).queue(sentmessage -> { //send message but also do stuff after
+                    for(int i=2;i<message.length;i++){ //for every your mom i explained this last time
+                        StringBuffer sbubby = new StringBuffer(); //yadayada same thing
+                        int num = i + 47; //is anime over yet
+                        sbubby.append(Character.toChars(num)); //this game is great help my son is dying of stage 4 cancer
+                        sbubby.append(Character.toChars(0xfe0f)); //i am speed
+                        sbubby.append(Character.toChars(0x20e3)); //are we there yet
+                        sentmessage.addReaction(sbubby.toString()).queue(); //finally, sending the reactions
+                    } //now do it another couple hundred times
+                }); //we done wtf
+                break; //bork what do
 
             default:
                 event.getChannel().sendMessage("Unknown command. "
