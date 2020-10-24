@@ -210,30 +210,28 @@ public class Bot {
                 break;
 
             case "poll":
-                if (message.length > 11){
-                    event.getChannel().sendMessage("Maximum 9 Options").queue();
-                    break;
-                } else if (message.length < 4) {
-                    event.getChannel().sendMessage("Minimum 2 Options");
+                String[] parsed = Helper.commandParser(message); //Combines quotes together
+                if (parsed.length > 10 || parsed.length < 3){ //Ensure the arguments are withing the limits
+                    event.getChannel().sendMessage("Max 9 Min 2 Options").queue();
                     break;
                 }
                 EmbedBuilder embed = new EmbedBuilder(); //initiates the building of embed
-                embed.setTitle(message[1]); //sets the title of the embed
+                embed.setTitle(parsed[0]); //sets the title of the embed
                 embed.setColor(0x2f3136); //sets the color of the embed to the same as discord dark mode bg
                 embed.setAuthor(user);
-                for(int i=2;i<message.length;i++){ // iterate from the third word
+                for(int i=1;i<parsed.length;i++){ //iterate from the first option
                     StringBuffer sbubby = new StringBuffer(); //initiates a stringbuffer that will be used to create an emote
-                    int num = i + 47; //the poll emotes 
+                    int num = i + 48; //48 is equivalent to 0️⃣ 
                     sbubby.append(Character.toChars(num));
                     sbubby.append(Character.toChars(0xfe0f));
                     sbubby.append(Character.toChars(0x20e3));
-                    embed.addField("Choice "+ sbubby, message[i], false);
+                    embed.addField("Choice "+ sbubby, parsed[i], false);
                 }
                 MessageEmbed pollembed = embed.build(); //embed is done
                 event.getChannel().sendMessage(pollembed).queue(sentmessage -> { //sends the poll to the chat
-                    for(int i=2;i<message.length;i++){
+                    for(int i=1;i<parsed.length;i++){
                         StringBuffer sbubby = new StringBuffer(); 
-                        int num = i + 47;
+                        int num = i + 48;
                         sbubby.append(Character.toChars(num)); 
                         sbubby.append(Character.toChars(0xfe0f)); 
                         sbubby.append(Character.toChars(0x20e3)); 
