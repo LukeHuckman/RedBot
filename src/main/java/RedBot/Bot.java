@@ -210,35 +210,35 @@ public class Bot {
                 break;
 
             case "poll":
+                String[] parsed = Helper.commandParser(message); //Combines quotes together
+                if (parsed.length > 10 || parsed.length < 3){ //Ensure the arguments are withing the limits
+                    event.getChannel().sendMessage("Max 9 Min 2 Options").queue();
+                    break;
+                }
                 EmbedBuilder embed = new EmbedBuilder(); //initiates the building of embed
-                try{ //it tries to run whatever in the {} and if there's an error in the {}, it runs the thing in catch{}
-                    embed.setTitle(message[1]); //sets the title of the embed
-                } catch (ArrayIndexOutOfBoundsException ex) { //the error if some unexpected shit happens(f an unexpected error happens then the error will give a traceback and the command will fail)
-                    event.getChannel().sendMessage("`d.poll <topic> <option1> <option2> <...>`").queue(); //sends the poll to the chat
-                    break; //ends the loop thingy
-                } 
+                embed.setTitle(parsed[0]); //sets the title of the embed
                 embed.setColor(0x2f3136); //sets the color of the embed to the same as discord dark mode bg
-                embed.setAuthor(user); //sets the author of the embed, usually the user
-                for(int i=2;i<message.length;i++){ // iterate from the third word of the command cause d.poll topic option, it takes the option.
+                embed.setAuthor(user);
+                for(int i=1;i<parsed.length;i++){ //iterate from the first option
                     StringBuffer sbubby = new StringBuffer(); //initiates a stringbuffer that will be used to create an emote
-                    int num = i + 47; //the poll reaction emote 
-                    sbubby.append(Character.toChars(num)); //append stuff that will eventually become the string
-                    sbubby.append(Character.toChars(0xfe0f)); //append stuff that will eventually become the string
-                    sbubby.append(Character.toChars(0x20e3)); //append stuff that will eventually become the string
-                    embed.addField("Choice "+ sbubby, message[i], false); //append stuff that will eventually become the string
-                } //keep looping until i is longer than the msg
+                    int num = i + 48; //48 is equivalent to 0️⃣ 
+                    sbubby.append(Character.toChars(num));
+                    sbubby.append(Character.toChars(0xfe0f));
+                    sbubby.append(Character.toChars(0x20e3));
+                    embed.addField("Choice "+ sbubby, parsed[i], false);
+                }
                 MessageEmbed pollembed = embed.build(); //embed is done
                 event.getChannel().sendMessage(pollembed).queue(sentmessage -> { //sends the poll to the chat
-                    for(int i=2;i<message.length;i++){
+                    for(int i=1;i<parsed.length;i++){
                         StringBuffer sbubby = new StringBuffer(); 
-                        int num = i + 47; //refer above
+                        int num = i + 48;
                         sbubby.append(Character.toChars(num)); 
                         sbubby.append(Character.toChars(0xfe0f)); 
                         sbubby.append(Character.toChars(0x20e3)); 
                         sentmessage.addReaction(sbubby.toString()).queue(); //sends the reactions
-                    } //repeats
-                }); // comments by egg with the guidance of med (idk if the comments are accurate or not)
-                break; //ends loop or something
+                    }
+                });
+                break;
 
             default:
                 event.getChannel().sendMessage("Unknown command. "
