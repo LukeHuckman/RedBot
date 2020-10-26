@@ -1,8 +1,11 @@
 package RedBot;
 
 import java.lang.Character;
+import java.net.URL;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Random;
@@ -11,6 +14,8 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Icon;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -221,7 +226,7 @@ public class Bot {
                 embed.setAuthor(user);
                 for(int i=1;i<parsed.length;i++){ //iterate from the first option
                     StringBuffer sbubby = new StringBuffer(); //initiates a stringbuffer that will be used to create an emote
-                    int num = i + 48; //48 is equivalent to 0️⃣ 
+                    int num = i + 48; //48 is equivalent to
                     sbubby.append(Character.toChars(num));
                     sbubby.append(Character.toChars(0xfe0f));
                     sbubby.append(Character.toChars(0x20e3));
@@ -238,6 +243,39 @@ public class Bot {
                         sentmessage.addReaction(sbubby.toString()).queue(); //sends the reactions
                     }
                 });
+                break;
+            
+            case "clone": //Creates a fake message using webhooks
+                Member cloneTarget = Helper.convertToMember(message[1], event);
+                if (cloneTarget == null) { //In case there's an invalid input for member param
+                    event.getChannel().sendMessage("Unknown member").queue();
+                    break;
+                }
+                StringBuffer cloneMessageBuffer = new StringBuffer();
+                for (String i : message) {
+                    if (message[0].equals(i) || message[1].equals(i)) {
+                        continue;
+                    }
+                    cloneMessageBuffer.append(i + " ");
+                }
+                String cloneMessage = cloneMessageBuffer.toString(); //Content to be sent
+                String cloneName = cloneTarget.getEffectiveName(); //Name of the target/clone
+				try { //Attempt to get the target's avatar in bytes
+                    URL cloneAvatarUrl = new URL(cloneTarget.getUser().getEffectiveAvatarUrl());
+                    ByteArrayOutputStream cloneByteStream = new ByteArrayOutputStream();
+                    InputStream inputStream = cloneAvatarUrl.openStream();
+                    int n = 0;
+                    byte[] cloneBuffer = new byte[1024];
+                    while (-1 != (n = inputStream.read(cloneBuffer))) cloneByteStream.write(cloneBuffer, 0, n);
+                    byte[] cloneimg = cloneByteStream.toByteArray();
+                    Icon cloneAvatar = Icon.from(cloneimg); //Turn the bytes into Icon object
+                    event.getTextChannel().createWebhook(cloneName).setAvatar(cloneAvatar).queue(clonehook -> { //Create webhook
+                        Helper.webhookSender(cloneMessage, clonehook); //Send webhook
+                        clonehook.delete().queue(); //Remove webhook
+                    });
+				} catch (IOException e) {
+                    event.getChannel().sendMessage("Error cloning").queue();
+				}
                 break;
 
             default:
@@ -309,8 +347,13 @@ public class Bot {
                 + "`d.minecraft`:\n"
                 + "Shows info and/or status of the Minecraft server\n"
                 + "\n"
-                + "`d.poll <topic> <choice1> <choice2>`:\n"
-                + "Creates a poll for your fellow humans to vote on.";
+                + "`d.poll <topic> <choice1> <choice2> ...`:\n"
+                + "Creates a poll for your fellow humans to vote on\n"
+                + "Example: `d.poll \"Best drink\" Coffee Tea`\n"
+                + "\n"
+                + "`d.clone <member to clone> <fake message>`:\n"
+                + "Creates a fake message as if the target member posted it\n"
+                + "Example: `d.clone xXSLAYERXx I miss my mom :<`";
               
     } 
 }
