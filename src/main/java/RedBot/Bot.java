@@ -226,7 +226,7 @@ public class Bot {
                 embed.setAuthor(user);
                 for(int i=1;i<parsed.length;i++){ //iterate from the first option
                     StringBuffer sbubby = new StringBuffer(); //initiates a stringbuffer that will be used to create an emote
-                    int num = i + 48; //48 is equivalent to
+                    int num = i + 48; //48 is equivalent to emoji 0
                     sbubby.append(Character.toChars(num));
                     sbubby.append(Character.toChars(0xfe0f));
                     sbubby.append(Character.toChars(0x20e3));
