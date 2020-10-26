@@ -217,7 +217,7 @@ public class Bot {
             case "poll":
                 String[] parsed = Helper.commandParser(message); //Combines quotes together
                 if (parsed.length > 10 || parsed.length < 3){ //Ensure the arguments are withing the limits
-                    event.getChannel().sendMessage("Max 9 Min 2 Options").queue();
+                    event.getChannel().sendMessage("2 to 9 options required").queue();
                     break;
                 }
                 EmbedBuilder embed = new EmbedBuilder(); //initiates the building of embed
