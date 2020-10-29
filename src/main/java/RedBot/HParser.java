@@ -39,23 +39,23 @@ public class HParser {
         this.source = source;
     }
     
-    public static Elements getData(String type){
+    public static Elements getData(String type) {
         Document doc = Jsoup.parse(source);
         Elements data = null;
-        switch(type){
-            case "link":
+        switch(type) {
+            case "link": //All links on the page
                 data = doc.select("a[href]");
                 break;
-            case"numbers":
+            case"numbers": //Links with magic numbers
                 data = doc.select("a[href*='/g/']");
                 break;
-            case "title":
+            case "title": //Doujinshi titles
                 data = doc.select("span");
                 break;
-            case "thumb":
+            case "thumb": //Thumbnails, i.e. cover pages
                 data = doc.select("img[class]");
                 break;
-            case "tags":
+            case "tags": //Self explanatory
                 data = doc.select("a[href*='/tag/'] span[class='name']");
                 break;
         }
