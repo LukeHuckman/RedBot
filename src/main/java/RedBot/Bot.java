@@ -260,7 +260,7 @@ public class Bot {
                 }
                 String cloneMessage = cloneMessageBuffer.toString(); //Content to be sent
                 String cloneName = cloneTarget.getEffectiveName(); //Name of the target/clone
-				try { //Attempt to get the target's avatar in bytes
+                try { //Attempt to get the target's avatar in bytes
                     URL cloneAvatarUrl = new URL(cloneTarget.getUser().getEffectiveAvatarUrl());
                     ByteArrayOutputStream cloneByteStream = new ByteArrayOutputStream();
                     InputStream inputStream = cloneAvatarUrl.openStream();
@@ -273,7 +273,7 @@ public class Bot {
                         Helper.webhookSender(cloneMessage, clonehook); //Send webhook
                         clonehook.delete().queue(); //Remove webhook
                     });
-				} catch (IOException e) {
+                } catch (IOException e) {
                     event.getChannel().sendMessage("Error cloning").queue();
 				}
                 break;

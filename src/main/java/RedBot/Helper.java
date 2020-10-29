@@ -18,7 +18,7 @@ public class Helper { //a helper class that contains QoL improvements
         Boolean isInQuotes = false; //A flag to decide whether to combine or not
         StringBuffer buffer = new StringBuffer(); //A buffer to place the strings in
         for (String i : message) { //Iterate through the message to find any strings in quotes
-            if (message[0].equals(i)) continue;
+            if (message[0].equals(i)||i.isBlank()) continue;
             if (i.startsWith("\"")&&i.endsWith("\"")&&!isInQuotes) str.add(i.substring(1,i.length()-1)); //If string starts and ends with quotes, treat as a normal word
             else if (i.startsWith("\"")&&!isInQuotes) { //Else if string begins with a quote,
                 buffer.append(i.substring(1)); //append said string minus the quote itself

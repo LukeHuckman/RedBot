@@ -14,4 +14,4 @@ Requires Dinnerbone's [mcstatus](https://github.com/Dinnerbone/mcstatus) for the
 * Minecraft server status
 * A NSFW command
 * Polls
-* Clone
+* Fake messages
