@@ -46,6 +46,9 @@ public class HParser {
             case "link":
                 data = doc.select("a[href]");
                 break;
+            case"numbers":
+                data = doc.select("a[href*='/g/']");
+                break;
             case "title":
                 data = doc.select("span");
                 break;

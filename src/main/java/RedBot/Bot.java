@@ -156,13 +156,15 @@ public class Bot {
                         url +=message[i]+"+";
                     HParser Page = new HParser(url); //Get the first page of results
                     Elements links = Page.getData("link");
+                    if(links.last().toString().contains("last")){
+                        //Get the total number of results pages
+                        String lastpage[] = links.last().attr("href").split("=");
+                        url+="&page="+(1+r.nextInt(Integer.parseInt(lastpage[lastpage.length-1])-1));
+                    }
                     //Get the total number of results pages
-                    String lastpage[] = links.last().attr("href").split("=");
-                    url+="&page="+(1+r.nextInt(Integer.parseInt(lastpage[lastpage.length-1])-1));
                     Page = new HParser(url); //get a random results page
-                    Elements magicNumberURLs = Page.getData("link");
-                    List linksList = magicNumberURLs.subList(21, links.size()-9);
-                    int magicNumber = Integer.parseInt(linksList.get(r.nextInt(linksList.size()-1))
+                    Elements magicNumberURLs = Page.getData("numbers");
+                    int magicNumber = Integer.parseInt(magicNumberURLs.get(r.nextInt(magicNumberURLs.size()-1))
                             .toString().split("/")[2]); //Magic digits taken from <a> tags
                     Page = new HParser("https://nhentai.net/g/"+magicNumber);
                     Elements pageTitle = Page.getData("title");
