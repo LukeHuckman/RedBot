@@ -23,7 +23,7 @@ public class Main extends ListenerAdapter {
             mcAddress = botInfo.nextLine();
             jda = JDABuilder.create(token, intents()).setStatus(OnlineStatus.ONLINE).build();
             jda.addEventListener(new Main());
-        }catch(FileNotFoundException e){
+        }catch(FileNotFoundException e) {
             System.out.println("\"botInfo.txt\" not found!\n\n"
                     + "Create a \"botInfo.txt\" file in the bin folder\n"
                     + "containing two lines about your bot:\n"
@@ -36,7 +36,7 @@ public class Main extends ListenerAdapter {
         }
     }
     
-    private static ArrayList<GatewayIntent> intents(){
+    private static ArrayList<GatewayIntent> intents() { //Add more if necessary
         ArrayList<GatewayIntent> intents = new ArrayList<>();
         intents.add(GatewayIntent.GUILD_MEMBERS);
         intents.add(GatewayIntent.GUILD_MESSAGES);
@@ -47,12 +47,12 @@ public class Main extends ListenerAdapter {
     }
     
     @Override
-    public void onReady(ReadyEvent event){
+    public void onReady(ReadyEvent event) {
         bot.mcStatusPresence(event);
     }
     
     @Override
-    public void onMessageReceived(MessageReceivedEvent event){
+    public void onMessageReceived(MessageReceivedEvent event) {
         if(event.getAuthor().isBot())
             return;
         String user = event.getAuthor().getAsTag();

@@ -18,21 +18,27 @@ public class Helper { //a helper class that contains QoL improvements
         Boolean isInQuotes = false; //A flag to decide whether to combine or not
         StringBuffer buffer = new StringBuffer(); //A buffer to place the strings in
         for (String i : message) { //Iterate through the message to find any strings in quotes
-            if (message[0].equals(i)||i.isBlank()) continue;
-            if (i.startsWith("\"")&&i.endsWith("\"")&&!isInQuotes) str.add(i.substring(1,i.length()-1)); //If string starts and ends with quotes, treat as a normal word
-            else if (i.startsWith("\"")&&!isInQuotes) { //Else if string begins with a quote,
+            if (message[0].equals(i) || i.isBlank())
+                continue;
+            if (i.startsWith("\"") && i.endsWith("\"") && !isInQuotes)
+                str.add(i.substring(1,i.length()-1)); //If string starts and ends with quotes, treat as a normal word
+            else if (i.startsWith("\"") && !isInQuotes) { //Else if string begins with a quote,
                 buffer.append(i.substring(1)); //append said string minus the quote itself
                 buffer.append(" ");
                 isInQuotes = true;
-            } else if (i.endsWith("\"")&&isInQuotes) { //If string ends with a quote,
+            }
+            else if (i.endsWith("\"") && isInQuotes) { //If string ends with a quote,
                 buffer.append(i.substring(0, i.length()-1)); //append to buffer minus the quote,
                 str.add(buffer.toString()); //turn it into a string and flushes it to main string list,
                 buffer.setLength(0); //and reset the buffer
                 isInQuotes = false;
-            } else if (isInQuotes) {
+            }
+            else if (isInQuotes) {
                 buffer.append(i);
                 buffer.append(" ");
-            } else {str.add(i);} //Place the rest of the strings in the list as is
+            }
+            else
+                str.add(i); //Place the rest of the strings in the list as is
         }
         String[] strarray = new String[str.size()];
         strarray = str.toArray(strarray);
@@ -44,7 +50,8 @@ public class Helper { //a helper class that contains QoL improvements
         }
         if (input.matches("[0-9]+")) { //If a supposed id is sent,
             Member member = event.getGuild().getMemberById(input); //get member from the guild and return it
-            if (member instanceof Member) return member;
+            if (member instanceof Member)
+                return member;
         }
         try {
             Member member = event.getGuild().getMemberByTag(input); //by tag
@@ -65,7 +72,8 @@ public class Helper { //a helper class that contains QoL improvements
     }
     public static void webhookSender (String content, Webhook webhook) { //A method to send webhooks
         try {
-            URL url = new URL("https://discord.com/api/v7/webhooks/"+webhook.getId()+"/"+webhook.getToken()); //The API endpoint
+            URL url = new URL("https://discord.com/api/v7/webhooks/"
+                    +webhook.getId()+"/"+webhook.getToken()); //The API endpoint
             URLConnection conn = url.openConnection();
             HttpURLConnection http = (HttpURLConnection)conn;
             http.setRequestMethod("POST");
@@ -79,6 +87,8 @@ public class Helper { //a helper class that contains QoL improvements
             try(OutputStream os = http.getOutputStream()) {
                 os.write(out);
             }
-        } catch (IOException e) {e.printStackTrace();}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
