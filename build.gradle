@@ -12,5 +12,5 @@ repositories {
 dependencies {
     //testImplementation     'junit:junit:4.13'
     compile("net.dv8tion:JDA:4.2.0_168")
-    compile ("org.jsoup:jsoup:1.13.1")
+    compile("org.jsoup:jsoup:1.13.1")
 }

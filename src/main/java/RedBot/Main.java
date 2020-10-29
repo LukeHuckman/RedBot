@@ -38,6 +38,7 @@ public class Main extends ListenerAdapter {
     
     private static ArrayList<GatewayIntent> intents(){
         ArrayList<GatewayIntent> intents = new ArrayList<>();
+        intents.add(GatewayIntent.GUILD_MEMBERS);
         intents.add(GatewayIntent.GUILD_MESSAGES);
         intents.add(GatewayIntent.GUILD_MESSAGE_REACTIONS);
         intents.add(GatewayIntent.GUILD_EMOJIS);
