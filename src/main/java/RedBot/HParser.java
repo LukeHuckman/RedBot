@@ -40,13 +40,9 @@ public class HParser {
         //System.out.println(this.source);
     }
     
-    public boolean noResults() { 
+    public boolean noResults() { //Checks weather the query hasn't found anything
         Document doc = Jsoup.parse(source);
-        try{
-            return doc.select("h2").last().toString().equals("<h2>No results found</h2>");
-        } catch (NullPointerException e){
-            return false;
-        }
+        return !doc.select("h2").isEmpty();
     }
     
     public static Elements getData(String type) {
