@@ -37,6 +37,16 @@ public class HParser {
             } catch (IOException ioe) {}
         }
         this.source = source;
+        //System.out.println(this.source);
+    }
+    
+    public boolean noResults() { 
+        Document doc = Jsoup.parse(source);
+        try{
+            return doc.select("h2").last().toString().equals("<h2>No results found</h2>");
+        } catch (NullPointerException e){
+            return false;
+        }
     }
     
     public static Elements getData(String type) {
