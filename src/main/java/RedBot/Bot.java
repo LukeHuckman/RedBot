@@ -250,17 +250,20 @@ public class Bot {
                 break;
                 
             case "clone": //Creates a fake message using webhooks
-                Member cloneTarget = Helper.convertToMember(message[1], event);
+                String[] cleanMessage = Helper.commandParser(event.getMessage().getContentDisplay().split(" "));
+                Member cloneTarget = Helper.convertToMember(cleanMessage[0], event);
                 if (cloneTarget == null) { //In case there's an invalid input for member param
                     event.getChannel().sendMessage("Unknown member").queue();
                     break;
+                } else if (event.getMessage().mentionsEveryone()) {
+                    event.getChannel().sendMessage("Cannot mass ping").queue();
+                    break;
                 }
                 StringBuffer cloneMessageBuffer = new StringBuffer();
-                for (String i : message) {
-                    if (message[0].equals(i) || message[1].equals(i)) {
-                        continue;
+                for (String i : cleanMessage) {
+                    if (!cleanMessage[0].equals(i)) {
+                        cloneMessageBuffer.append(i + " ");
                     }
-                    cloneMessageBuffer.append(i + " ");
                 }
                 String cloneMessage = cloneMessageBuffer.toString(); //Content to be sent
                 String cloneName = cloneTarget.getEffectiveName(); //Name of the target/clone

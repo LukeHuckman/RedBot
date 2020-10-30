@@ -47,6 +47,8 @@ public class Helper { //a helper class that contains QoL improvements
     public static Member convertToMember (String input, MessageReceivedEvent event) { //Takes input and tries to find a specific member
         if (input.startsWith("<@")&&input.endsWith(">")) {
             input = input.replaceAll("\\D", "");
+        } else if (input.startsWith("@")) {
+            input = input.substring(1);
         }
         if (input.matches("[0-9]+")) { //If a supposed id is sent,
             Member member = event.getGuild().getMemberById(input); //get member from the guild and return it
