@@ -37,22 +37,35 @@ public class HParser {
             } catch (IOException ioe) {}
         }
         this.source = source;
+        //System.out.println(this.source);
     }
     
-    public static Elements getData(String type){
+    public boolean noResults() { //Checks weather the query hasn't found anything
+        Document doc = Jsoup.parse(source);
+        return !doc.select("h2").isEmpty();
+    }
+    
+    public static Elements getData(String type) {
         Document doc = Jsoup.parse(source);
         Elements data = null;
-        switch(type){
-            case "link":
+        switch(type) {
+            case "link": //All links on the page
                 data = doc.select("a[href]");
                 break;
-            case "title":
+                
+            case"numbers": //Links with magic numbers
+                data = doc.select("a[href*='/g/']");
+                break;
+                
+            case "title": //Doujinshi titles
                 data = doc.select("span");
                 break;
-            case "thumb":
+                
+            case "thumb": //Thumbnails, i.e. cover pages
                 data = doc.select("img[class]");
                 break;
-            case "tags":
+                
+            case "tags": //Self explanatory
                 data = doc.select("a[href*='/tag/'] span[class='name']");
                 break;
         }
