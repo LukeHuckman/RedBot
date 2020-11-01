@@ -1,11 +1,8 @@
 package RedBot;
 
 import java.lang.Character;
-import java.net.URL;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Random;
@@ -14,7 +11,6 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Icon;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -269,18 +265,17 @@ public class Bot {
                 String cloneMessage = cloneMessageBuffer.toString(); //Content to be sent
                 String cloneName = cloneTarget.getEffectiveName(); //Name of the target/clone
                 String cloneAvatarUrl = cloneTarget.getUser().getEffectiveAvatarUrl();
-                event.getTextChannel().retrieveWebhooks().queue(hooklist -> {
+                event.getTextChannel().retrieveWebhooks().queue(hooklist -> { //Try to look for DarkHook in the channel
                     for (Webhook hook : hooklist) {
-                        if (hook.getName() == "DarkHook") {
+                        if (hook.getName() == "DarkHook") { //If found, use it
                             Helper.webhookSender(hook, cloneMessage, cloneName, cloneAvatarUrl);
                             return;
                         }
                     }
-                    event.getTextChannel().createWebhook("DarkHook").queue(clonehook -> {
+                    event.getTextChannel().createWebhook("DarkHook").queue(clonehook -> { //else, create a new one
                         Helper.webhookSender(clonehook, cloneMessage, cloneName, cloneAvatarUrl);
                     });
                 });
-    
                 break;
                 
             default:
