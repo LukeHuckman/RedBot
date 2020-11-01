@@ -72,7 +72,7 @@ public class Helper { //a helper class that contains QoL improvements
             }
         }
     }
-    public static void webhookSender (String content, Webhook webhook) { //A method to send webhooks
+    public static void webhookSender (Webhook webhook, String content, String name, String avatarURL) { //A method to send webhooks
         try {
             URL url = new URL("https://discord.com/api/v7/webhooks/"
                     +webhook.getId()+"/"+webhook.getToken()); //The API endpoint
@@ -80,7 +80,13 @@ public class Helper { //a helper class that contains QoL improvements
             HttpURLConnection http = (HttpURLConnection)conn;
             http.setRequestMethod("POST");
             http.setDoOutput(true);
-            String json = "{\"content\": \""+content+"\"}"; //The json to send, currently only for content strings
+            String json = "{\"content\": \""
+                        + content
+                        + "\", \"username\": \""
+                        + name
+                        + "\", \"avatar_url\": \""
+                        + avatarURL
+                        + "\"}"; //The json to send
             byte[] out = json.getBytes(StandardCharsets.UTF_8); //Turn the json into bytes
             int length = out.length;
             http.setFixedLengthStreamingMode(length);
