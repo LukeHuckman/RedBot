@@ -154,40 +154,44 @@ public class Bot {
                     String url = "https://nhentai.net/search/?q=";
                     for(int i=1;i<message.length;i++)
                         url +=message[i]+"+";
-                    HParser Page = new HParser(url); //Get the first page of results
-                    Elements links = Page.getData("link");
-                    if(links.last().toString().contains("last")) { //When the results are longer than 1 page
-                        //Get the total number of results pages and append the last page
-                        String lastpage[] = links.last().attr("href").split("=");
-                        url+="&page="+(1+r.nextInt(Integer.parseInt(lastpage[lastpage.length-1])-1));
+                    HParser page = new HParser(url); //Get the first page of results
+                    if(!page.noResults()){
+                        Elements links = page.getData("link");
+                        if(links.last().toString().contains("last")) { //When the results are longer than 1 page
+                            //Get the total number of results pages and append the last page
+                            String lastpage[] = links.last().attr("href").split("=");
+                            url+="&page="+(1+r.nextInt(Integer.parseInt(lastpage[lastpage.length-1])-1));
+                        }
+                        page = new HParser(url); //get a random results page
+                        Elements magicNumberURLs = page.getData("numbers");
+                        int magicNumber = Integer.parseInt(magicNumberURLs.get(r.nextInt(magicNumberURLs.size()-1))
+                                .toString().split("/")[2]); //Magic digits taken from <a> tags
+                        page = new HParser("https://nhentai.net/g/"+magicNumber);
+                        Elements pageTitle = page.getData("title");
+                        List rawTitle = pageTitle.subList(3, 5);
+                        String title = "";
+                        for(int i=0;i<rawTitle.size();i++) { // Extract and combine the title
+                            String text = rawTitle.get(i).toString().split(">")[1];
+                            title+=text.substring(0, text.length()-6);
+                        }
+                        Elements rawTags = page.getData("tags");
+                        String tags="Tags:\n";
+                        for(int i=0;i<rawTags.size();i++) { //Extract the tags
+                            tags += rawTags.get(i).toString().split("<")[1].substring(18);
+                            if(i!=rawTags.size()-1)
+                                tags += ", ";
+                        }
+                        Elements thumbnail = page.getData("thumb"); //Get the thumbnail
+                        //Building the embed
+                        EmbedBuilder embed = new EmbedBuilder();
+                        embed.setImage(thumbnail.attr("data-src"));
+                        embed.setTitle(title,"https://nhentai.net/g/"+magicNumber);
+                        embed.setDescription("#"+ magicNumber + "\n\n" + tags);
+                        MessageEmbed hentaiEmbed = embed.build();
+                        event.getChannel().sendMessage(hentaiEmbed).queue();
                     }
-                    Page = new HParser(url); //get a random results page
-                    Elements magicNumberURLs = Page.getData("numbers");
-                    int magicNumber = Integer.parseInt(magicNumberURLs.get(r.nextInt(magicNumberURLs.size()-1))
-                            .toString().split("/")[2]); //Magic digits taken from <a> tags
-                    Page = new HParser("https://nhentai.net/g/"+magicNumber);
-                    Elements pageTitle = Page.getData("title");
-                    List rawTitle = pageTitle.subList(3, 5);
-                    String title = "";
-                    for(int i=0;i<rawTitle.size();i++) { // Extract and combine the title
-                        String text = rawTitle.get(i).toString().split(">")[1];
-                        title+=text.substring(0, text.length()-6);
-                    }
-                    Elements rawTags = Page.getData("tags");
-                    String tags="Tags:\n";
-                    for(int i=0;i<rawTags.size();i++) { //Extract the tags
-                        tags += rawTags.get(i).toString().split("<")[1].substring(18);
-                        if(i!=rawTags.size()-1)
-                            tags += ", ";
-                    }
-                    Elements thumbnail = Page.getData("thumb"); //Get the thumbnail
-                    //Building the embed
-                    EmbedBuilder embed = new EmbedBuilder();
-                    embed.setImage(thumbnail.attr("data-src"));
-                    embed.setTitle(title,"https://nhentai.net/g/"+magicNumber);
-                    embed.setDescription("#"+ magicNumber + "\n\n" + tags);
-                    MessageEmbed hentaiEmbed = embed.build();
-                    event.getChannel().sendMessage(hentaiEmbed).queue();
+                    else
+                        event.getChannel().sendMessage("No results found").queue();
                 }
                 break;
                 
