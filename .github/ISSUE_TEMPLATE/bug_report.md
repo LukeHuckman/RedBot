@@ -19,9 +19,5 @@ JRE Version: [Insert JRE Version here, a clear screenshot works too]
 Add any other context about the problem here.
 
 
-Issue Template modified from FreeTube. 
-[https://github.com/FreeTubeApp/FreeTube]
-
-
 
 
