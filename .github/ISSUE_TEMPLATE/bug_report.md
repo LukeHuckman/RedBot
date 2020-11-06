@@ -1,3 +1,12 @@
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: ''
+assignees: ''
+
+---
+
 **Behavior of the program**
 Please write a clear and concise description of what the bug is.
 
@@ -17,7 +26,3 @@ JRE Version: [Insert JRE Version here, a clear screenshot works too]
 
 **Additional context**
 Add any other context about the problem here.
-
-
-
-
