@@ -21,7 +21,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Webhook;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-
 import org.jsoup.select.Elements;
 
 public class Bot {
@@ -299,7 +298,6 @@ public class Bot {
                 String ddgquery = URLEncoder.encode(ddgbuffer.toString(), "UTF-8"); //encodes query into a valid URL format
                 URL ddgurl = new URL("https://duckduckgo.com/html/?q="+ddgquery);
                 HttpURLConnection ddgconn = (HttpURLConnection)ddgurl.openConnection();
-                ddgconn.setDoOutput(true);
                 ddgconn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"); //ddg ignores requests without proper User-Agents
                 BufferedReader ddgin = new BufferedReader(new InputStreamReader(ddgconn.getInputStream()));
                 String ddgline;
