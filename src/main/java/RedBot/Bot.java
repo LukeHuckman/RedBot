@@ -392,7 +392,7 @@ public class Bot {
                 + "Creates a fake message as if the target member posted it\n"
                 + "Example: `d.clone xXSLAYERXx I miss my mom :<`\n"
                 + "\n"
-                + "`d.search <query>`:"
+                + "`d.search <query>`:\n"
                 + "Searches a query in the world wide web\n"
                 + "Example: `d.search Kombucha recipe`";
     } 
