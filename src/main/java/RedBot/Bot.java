@@ -1,9 +1,13 @@
 package RedBot;
 
-import java.lang.Character;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
@@ -17,6 +21,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Webhook;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+
 import org.jsoup.select.Elements;
 
 public class Bot {
@@ -281,6 +286,36 @@ public class Bot {
                     });
                 });
                 break;
+            
+            case "ddg": //Queries top search result from https://duckduckgo.com
+            case "search":
+                StringBuffer ddgbuffer = new StringBuffer();
+                for (String i : message) {
+                    if (!i.startsWith(Main.prefix)) {
+                        ddgbuffer.append(i+" ");
+                    }
+                }
+                try {
+                String ddgquery = URLEncoder.encode(ddgbuffer.toString(), "UTF-8"); //encodes query into a valid URL format
+                URL ddgurl = new URL("https://duckduckgo.com/html/?q="+ddgquery);
+                HttpURLConnection ddgconn = (HttpURLConnection)ddgurl.openConnection();
+                ddgconn.setDoOutput(true);
+                ddgconn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"); //ddg ignores requests without proper User-Agents
+                BufferedReader ddgin = new BufferedReader(new InputStreamReader(ddgconn.getInputStream()));
+                String ddgline;
+                while ((ddgline = ddgin.readLine()) != null) {
+                    if (ddgline.contains("class=\"result__url\"") && !ddgline.contains("ad_provider")) { //gets results while ignoring ads
+                        String ddgresult = ddgline.substring(72, ddgline.length()-2); //filters garbage data
+                        ddgresult = URLDecoder.decode(ddgresult, StandardCharsets.UTF_8); //decodes URL into a valid link
+                        event.getChannel().sendMessage(ddgresult).queue();
+                        break;
+                    }
+                }
+                ddgin.close();
+                } catch (IOException ex) {
+                    event.getChannel().sendMessage("Error looking up results");
+                }
+                break;
                 
             default:
                 event.getChannel().sendMessage("Unknown command. "
@@ -357,6 +392,10 @@ public class Bot {
                 + "\n"
                 + "`d.clone <member to clone> <fake message>`:\n"
                 + "Creates a fake message as if the target member posted it\n"
-                + "Example: `d.clone xXSLAYERXx I miss my mom :<`";
+                + "Example: `d.clone xXSLAYERXx I miss my mom :<`\n"
+                + "\n"
+                + "`d.search <query>`:"
+                + "Searches a query in the world wide web\n"
+                + "Example: `d.search Kombucha recipe`";
     } 
 }
