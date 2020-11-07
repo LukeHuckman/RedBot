@@ -295,25 +295,25 @@ public class Bot {
                     }
                 }
                 try {
-                String ddgquery = URLEncoder.encode(ddgbuffer.toString(), "UTF-8"); //encodes query into a valid URL format
-                URL ddgurl;
-				if(!event.getTextChannel().isNSFW())
-					ddgurl = new URL("https://duckduckgo.com/html/?q="+ddgquery+"&kp=1");
-				else
-					ddgurl = new URL("https://duckduckgo.com/html/?q="+ddgquery);
-                HttpURLConnection ddgconn = (HttpURLConnection)ddgurl.openConnection();
-                ddgconn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"); //ddg ignores requests without proper User-Agents
-                BufferedReader ddgin = new BufferedReader(new InputStreamReader(ddgconn.getInputStream()));
-                String ddgline;
-                while ((ddgline = ddgin.readLine()) != null) {
-                    if (ddgline.contains("class=\"result__url\"") && !ddgline.contains("ad_provider")) { //gets results while ignoring ads
-                        String ddgresult = ddgline.substring(72, ddgline.length()-2); //filters garbage data
-                        ddgresult = URLDecoder.decode(ddgresult, StandardCharsets.UTF_8); //decodes URL into a valid link
-                        event.getChannel().sendMessage(ddgresult).queue();
-                        break;
+                    String ddgquery = URLEncoder.encode(ddgbuffer.toString(), "UTF-8"); //encodes query into a valid URL format
+                    URL ddgurl;
+                    if(!event.getTextChannel().isNSFW())
+                        ddgurl = new URL("https://duckduckgo.com/html/?q="+ddgquery+"&kp=1");
+                    else
+                        ddgurl = new URL("https://duckduckgo.com/html/?q="+ddgquery);
+                    HttpURLConnection ddgconn = (HttpURLConnection)ddgurl.openConnection();
+                    ddgconn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"); //ddg ignores requests without proper User-Agents
+                    BufferedReader ddgin = new BufferedReader(new InputStreamReader(ddgconn.getInputStream()));
+                    String ddgline;
+                    while ((ddgline = ddgin.readLine()) != null) {
+                        if (ddgline.contains("class=\"result__url\"") && !ddgline.contains("ad_provider")) { //gets results while ignoring ads
+                            String ddgresult = ddgline.substring(72, ddgline.length()-2); //filters garbage data
+                            ddgresult = URLDecoder.decode(ddgresult, StandardCharsets.UTF_8); //decodes URL into a valid link
+                            event.getChannel().sendMessage(ddgresult).queue();
+                            break;
+                        }
                     }
-                }
-                ddgin.close();
+                    ddgin.close();
                 } catch (IOException ex) {
                     event.getChannel().sendMessage("Error looking up results");
                 }
