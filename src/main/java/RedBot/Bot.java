@@ -296,7 +296,11 @@ public class Bot {
                 }
                 try {
                 String ddgquery = URLEncoder.encode(ddgbuffer.toString(), "UTF-8"); //encodes query into a valid URL format
-                URL ddgurl = new URL("https://duckduckgo.com/html/?q="+ddgquery);
+                URL ddgurl;
+				if(!event.getTextChannel().isNSFW())
+					ddgurl = new URL("https://duckduckgo.com/html/?q="+ddgquery+"&kp=1");
+				else
+					ddgurl = new URL("https://duckduckgo.com/html/?q="+ddgquery);
                 HttpURLConnection ddgconn = (HttpURLConnection)ddgurl.openConnection();
                 ddgconn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"); //ddg ignores requests without proper User-Agents
                 BufferedReader ddgin = new BufferedReader(new InputStreamReader(ddgconn.getInputStream()));
