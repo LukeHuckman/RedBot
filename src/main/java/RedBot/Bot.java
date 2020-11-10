@@ -32,7 +32,12 @@ public class Bot {
         Random r = new Random();
         switch(command) {
             case "help":
-                event.getChannel().sendMessage(help()).queue();
+                if(message.length==1)
+                    event.getChannel().sendMessage(help("1")).queue(); //Shows page 1 by default
+                else if(help(message[1]) != null)
+                    event.getChannel().sendMessage(help(message[1])).queue();
+                else
+                    event.getChannel().sendMessage("Unknown help topic. Try `d.help`").queue();
                 break;
                 
             case "quote": //Quotes a user's post from the past 100 posts
@@ -368,36 +373,81 @@ public class Bot {
         },0,10000);
     }
     
-    public String help() {
-        return 
+    public String help(String topic) {
+        String helpMsg = "";
+        String[] topics = {
                 "`d.quote random` or `d.quote @user`:\n"
-                + "Quotes a random post (from member of the server)\n"
-                + "\n"
-                + "`d.8ball <optional question>`:\n"
+                + "Quotes a random post (from member of the server)",
+            
+                "`d.8ball <optional question>`:\n"
                 + "Answers a yes/no question\n"
-                + "Example: `d.8ball is he horny?`\n"
-                + "\n"
-                + "`d.pick <option 1>, <option 2> ...`:\n"
+                + "Example: `d.8ball is he horny?`",
+                
+                "`d.pick <option 1>, <option 2> ...`:\n"
                 + "Chooses an option from a given selection\n"
-                + "Example: `d.pick homework, left 4 dead`\n"
-                + "\n"
-                + "`d.hentai <term 1> <term 2> ...`:\n"
+                + "Example: `d.pick homework, left 4 dead`",
+                
+                "`d.hentai <term 1> <term 2> ...`:\n"
                 + "Gives a random hentai based on the given terms\n"
-                + "Example: `d.hentai english catgirl`\n"
-                + "\n"
-                + "`d.minecraft`:\n"
-                + "Shows info and/or status of the Minecraft server\n"
-                + "\n"
-                + "`d.poll <topic> <choice1> <choice2> ...`:\n"
+                + "Example: `d.hentai english catgirl`",
+                
+                "`d.minecraft`:\n"
+                + "Shows info and/or status of the Minecraft server",
+                
+                "`d.poll <topic> <choice1> <choice2> ...`:\n"
                 + "Creates a poll for your fellow humans to vote on\n"
-                + "Example: `d.poll \"Best drink\" Coffee Tea`\n"
-                + "\n"
-                + "`d.clone <member to clone> <fake message>`:\n"
+                + "Example: `d.poll \"Best drink\" Coffee Tea`",
+                
+                "`d.clone <member to clone> <fake message>`:\n"
                 + "Creates a fake message as if the target member posted it\n"
-                + "Example: `d.clone xXSLAYERXx I miss my mom :<`\n"
-                + "\n"
-                + "`d.search <query>`:\n"
+                + "Example: `d.clone xXSLAYERXx I miss my mom :<`",
+                
+                "`d.search <query>`:\n"
                 + "Searches a query in the world wide web\n"
-                + "Example: `d.search Kombucha recipe`";
+                + "Example: `d.search Kombucha recipe`"};
+        
+            try {
+                switch(Integer.parseInt(topic)) { //Split all commands into 2 pages
+                    case 1:
+                        for(int i=0;i<topics.length/2;i++) {
+                            helpMsg += topics[i];
+                            if(i!=topics.length/2-1)
+                                helpMsg += "\n\n";
+                            else
+                                helpMsg += "\n\n(Page 1/2, `d.help 2` to see the next page)";
+                        }
+                        return helpMsg;
+                        
+                    case 2:
+                        for(int i=topics.length/2;i<topics.length;i++) {
+                            helpMsg += topics[i];
+                            if(i!=topics.length-1)
+                                helpMsg += "\n\n";
+                            else
+                                helpMsg += "\n\n(Page 2/2)";
+                        }
+                        return helpMsg;
+                        
+                    default:
+                        return null;
+                }
+            } catch (NumberFormatException e) { //If the user is not asking for a page
+                switch(topic){
+                    case "all": //All commands
+                        for(int i=0;i<topics.length;i++) {
+                            helpMsg += topics[i];
+                            if(i!=topics.length-1)
+                                helpMsg += "\n\n";
+                        }
+                        return helpMsg;
+                        
+                    default: //Specific commands
+                        for(int i=0;i<topics.length;i++) {
+                            if(topics[i].substring(3).startsWith(topic))
+                                return topics[i];
+                        }
+                        return null;
+            }
+        }
     } 
 }
