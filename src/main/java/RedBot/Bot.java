@@ -34,10 +34,13 @@ public class Bot {
             case "help":
                 if(message.length==1)
                     event.getChannel().sendMessage(help("1")).queue(); //Shows page 1 by default
-                else if(help(message[1]) != null)
-                    event.getChannel().sendMessage(help(message[1])).queue();
-                else
-                    event.getChannel().sendMessage("Unknown help topic. Try `d.help`").queue();
+                else {
+                    String helpMsg = help(message[1]);
+                    if(helpMsg != null)
+                        event.getChannel().sendMessage(helpMsg).queue();
+                    else
+                        event.getChannel().sendMessage("Unknown help topic. Try `d.help`").queue();
+                }
                 break;
                 
             case "quote": //Quotes a user's post from the past 100 posts
