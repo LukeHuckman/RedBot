@@ -360,11 +360,13 @@ public class Bot {
                         output+=line+"\n";
                     String playerNum = output.split("\\r?\\n")[2].split(" ")[1].split("/")[0];
                     switch(playerNum) {
+                        case "0":
+                            event.getJDA().getPresence().setActivity(null);
+                            break;
                         case "1":
                             event.getJDA().getPresence().setPresence(Activity
                                 .watching(playerNum + " Minecraft player"),true);
                             break;
-                            
                         default:
                             event.getJDA().getPresence().setPresence(Activity
                                 .watching(playerNum + " Minecraft players"),true);
