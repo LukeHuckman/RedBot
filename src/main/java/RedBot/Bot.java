@@ -3,8 +3,6 @@ package RedBot;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -294,36 +292,28 @@ public class Bot {
                 });
                 break;
             
-            case "ddg": //Queries top search result from https://duckduckgo.com
+            case "go": //Queries top search result from https://google.com
             case "search":
-                StringBuffer ddgbuffer = new StringBuffer();
+                StringBuffer gobuffer = new StringBuffer();
                 for (String i : message) {
                     if (!i.startsWith(Main.prefix)) {
-                        ddgbuffer.append(i+" ");
+                        gobuffer.append(i+" ");
                     }
                 }
+                String goSafe = "strict";
+                if (event.getTextChannel().isNSFW()) { //Determine safesearch rule based on channel
+                    goSafe = "off";
+                }
                 try {
-                    String ddgquery = URLEncoder.encode(ddgbuffer.toString(), "UTF-8"); //encodes query into a valid URL format
-                    URL ddgurl;
-                    if(!event.getTextChannel().isNSFW())
-                        ddgurl = new URL("https://duckduckgo.com/html/?q="+ddgquery+"&kp=1");
-                    else
-                        ddgurl = new URL("https://duckduckgo.com/html/?q="+ddgquery);
-                    HttpURLConnection ddgconn = (HttpURLConnection)ddgurl.openConnection();
-                    ddgconn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"); //ddg ignores requests without proper User-Agents
-                    BufferedReader ddgin = new BufferedReader(new InputStreamReader(ddgconn.getInputStream()));
-                    String ddgline;
-                    while ((ddgline = ddgin.readLine()) != null) {
-                        if (ddgline.contains("class=\"result__url\"") && !ddgline.contains("ad_provider")) { //gets results while ignoring ads
-                            String ddgresult = ddgline.substring(72, ddgline.length()-2); //filters garbage data
-                            ddgresult = URLDecoder.decode(ddgresult, StandardCharsets.UTF_8); //decodes URL into a valid link
-                            event.getChannel().sendMessage(ddgresult).queue();
-                            break;
-                        }
-                    }
-                    ddgin.close();
-                } catch (IOException ex) {
-                    event.getChannel().sendMessage("Error looking up results");
+                    String goQuery = URLEncoder.encode(gobuffer.toString().strip(), "UTF-8"); //Encodes query into a valid URL format
+                    HParser.ParserHeaded("https://www.google.com/search?q="+goQuery+"&safe="+goSafe);
+                    Elements goElements = HParser.getData("result");
+                    String goResult = goElements.toArray()[0].toString().split("\\?q=")[1].split("&sa=")[0].split("&amp;sa=")[0]; //Filters garbage
+                    event.getChannel().sendMessage(URLDecoder.decode(goResult, StandardCharsets.UTF_8)).queue(); //Decodes link into a readable format
+                } catch (IOException e) {
+                    event.getChannel().sendMessage("Error looking up results.").queue();
+                } catch (ArrayIndexOutOfBoundsException ae) { //If google returns no results
+                    event.getChannel().sendMessage("No results found.").queue();
                 }
                 break;
                 

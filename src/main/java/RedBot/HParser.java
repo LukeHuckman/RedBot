@@ -39,6 +39,15 @@ public class HParser {
         this.source = source;
         //System.out.println(this.source);
     }
+
+    public static void ParserHeaded(String url) { //Parses a webpage with a user agent
+        try {
+            String doc = Jsoup.connect(url).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64").get().toString();
+            HParser.source = doc;
+        } catch (IOException e) {
+            return;
+        }
+    }
     
     public boolean noResults() { //Checks weather the query hasn't found anything
         Document doc = Jsoup.parse(source);
@@ -67,6 +76,10 @@ public class HParser {
                 
             case "tags": //Self explanatory
                 data = doc.select("a[href*='/tag/'] span[class='name']");
+                break;
+            
+            case "result": //Google search result links
+                data = doc.select("div[class='kCrYT'] a");
                 break;
         }
         return data;
