@@ -3,11 +3,9 @@ package RedBot;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
@@ -167,7 +165,7 @@ public class Bot {
                     for(int i=1;i<message.length;i++)
                         url +=message[i]+"+";
                     HParser page = new HParser(url); //Get the first page of results
-                    if(!page.noResults()){
+                    if(!page.noResults("h2")){
                         Elements links = page.getData("link");
                         if(links.last().toString().contains("last")) { //When the results are longer than 1 page
                             //Get the total number of results pages and append the last page
@@ -294,36 +292,30 @@ public class Bot {
                 });
                 break;
             
-            case "ddg": //Queries top search result from https://duckduckgo.com
+            case "go": //Queries top search result from https://google.com
             case "search":
-                StringBuffer ddgbuffer = new StringBuffer();
+                StringBuffer gobuffer = new StringBuffer();
                 for (String i : message) {
                     if (!i.startsWith(Main.prefix)) {
-                        ddgbuffer.append(i+" ");
+                        gobuffer.append(i+" ");
                     }
                 }
+                String goSafe = "strict";
+                if (event.getTextChannel().isNSFW()) { //Determine safesearch rule based on channel
+                    goSafe = "off";
+                }
                 try {
-                    String ddgquery = URLEncoder.encode(ddgbuffer.toString(), "UTF-8"); //encodes query into a valid URL format
-                    URL ddgurl;
-                    if(!event.getTextChannel().isNSFW())
-                        ddgurl = new URL("https://duckduckgo.com/html/?q="+ddgquery+"&kp=1");
-                    else
-                        ddgurl = new URL("https://duckduckgo.com/html/?q="+ddgquery);
-                    HttpURLConnection ddgconn = (HttpURLConnection)ddgurl.openConnection();
-                    ddgconn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"); //ddg ignores requests without proper User-Agents
-                    BufferedReader ddgin = new BufferedReader(new InputStreamReader(ddgconn.getInputStream()));
-                    String ddgline;
-                    while ((ddgline = ddgin.readLine()) != null) {
-                        if (ddgline.contains("class=\"result__url\"") && !ddgline.contains("ad_provider")) { //gets results while ignoring ads
-                            String ddgresult = ddgline.substring(72, ddgline.length()-2); //filters garbage data
-                            ddgresult = URLDecoder.decode(ddgresult, StandardCharsets.UTF_8); //decodes URL into a valid link
-                            event.getChannel().sendMessage(ddgresult).queue();
-                            break;
-                        }
+                    String goQuery = URLEncoder.encode(gobuffer.toString().strip(), "UTF-8"); //Encodes query into a valid URL format
+                    HParser goParsed = new HParser("https://www.google.com/search?q="+goQuery+"&safe="+goSafe, "Mozilla/5.0 (Windows NT 10.0; Win64; x64");
+                    if (!goParsed.noResults("div[class='kCrYT'] a")) {
+                        event.getChannel().sendMessage("No results found.").queue();
+                        break;
                     }
-                    ddgin.close();
-                } catch (IOException ex) {
-                    event.getChannel().sendMessage("Error looking up results");
+                    Elements goElements = HParser.getData("result");
+                    String goResult = goElements.toArray()[0].toString().split("\\?q=")[1].split("&sa=")[0].split("&amp;sa=")[0]; //Filters garbage
+                    event.getChannel().sendMessage(URLDecoder.decode(goResult, "UTF-8")).queue(); //Decodes link into a readable format
+                } catch (UnsupportedEncodingException e) {
+                    event.getChannel().sendMessage("Error encoding input.").queue();
                 }
                 break;
                 
