@@ -3,9 +3,9 @@ package RedBot;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
@@ -165,7 +165,7 @@ public class Bot {
                     for(int i=1;i<message.length;i++)
                         url +=message[i]+"+";
                     HParser page = new HParser(url); //Get the first page of results
-                    if(!page.noResults()){
+                    if(!page.noResults("h2")){
                         Elements links = page.getData("link");
                         if(links.last().toString().contains("last")) { //When the results are longer than 1 page
                             //Get the total number of results pages and append the last page
@@ -306,14 +306,16 @@ public class Bot {
                 }
                 try {
                     String goQuery = URLEncoder.encode(gobuffer.toString().strip(), "UTF-8"); //Encodes query into a valid URL format
-                    HParser.ParserHeaded("https://www.google.com/search?q="+goQuery+"&safe="+goSafe);
+                    HParser goParsed = new HParser("https://www.google.com/search?q="+goQuery+"&safe="+goSafe, "Mozilla/5.0 (Windows NT 10.0; Win64; x64");
+                    if (!goParsed.noResults("div[class='kCrYT'] a")) {
+                        event.getChannel().sendMessage("No results found.").queue();
+                        break;
+                    }
                     Elements goElements = HParser.getData("result");
                     String goResult = goElements.toArray()[0].toString().split("\\?q=")[1].split("&sa=")[0].split("&amp;sa=")[0]; //Filters garbage
-                    event.getChannel().sendMessage(URLDecoder.decode(goResult, StandardCharsets.UTF_8)).queue(); //Decodes link into a readable format
-                } catch (IOException e) {
-                    event.getChannel().sendMessage("Error looking up results.").queue();
-                } catch (ArrayIndexOutOfBoundsException ae) { //If google returns no results
-                    event.getChannel().sendMessage("No results found.").queue();
+                    event.getChannel().sendMessage(URLDecoder.decode(goResult, "UTF-8")).queue(); //Decodes link into a readable format
+                } catch (UnsupportedEncodingException e) {
+                    event.getChannel().sendMessage("Error encoding input.").queue();
                 }
                 break;
                 
