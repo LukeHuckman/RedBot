@@ -15,4 +15,4 @@ Requires Dinnerbone's [mcstatus](https://github.com/Dinnerbone/mcstatus) for the
 * A NSFW command
 * Polls
 * Fake messages
-* DuckDuckGo search
+* Google search
