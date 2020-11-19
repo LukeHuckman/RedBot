@@ -55,7 +55,7 @@ public class HParser {
                 break;
             
             case "result": //Google search result links
-                data = doc.select("div[class='kCrYT'] a");
+                data = doc.select("div[class='kCrYT'] > a");
                 break;
         }
         return data;
