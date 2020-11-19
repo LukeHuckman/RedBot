@@ -307,7 +307,7 @@ public class Bot {
                 try {
                     String goQuery = URLEncoder.encode(gobuffer.toString().strip(), "UTF-8"); //Encodes query into a valid URL format
                     HParser goParsed = new HParser("https://www.google.com/search?q="+goQuery+"&safe="+goSafe, "Mozilla/5.0 (Windows NT 10.0; Win64; x64");
-                    if (!goParsed.noResults("div[class='kCrYT'] a")) {
+                    if (!goParsed.noResults("div[class='kCrYT'] > a")) {
                         event.getChannel().sendMessage("No results found.").queue();
                         break;
                     }
